@@ -120,7 +120,7 @@ export default {
       },
       staticLocationData: {
         id: '10708',
-        addressString: 'super',
+        addressString: '--',
         coordinates: {
           lat: 50,
           lon: 7,
