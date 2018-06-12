@@ -189,6 +189,16 @@ export default {
               }
             }],
             yAxes: yAxes
+          },
+          tooltips: {
+            mode: 'x',
+            callbacks: {
+              label: function (tooltipItem, data) {
+                console.log(tooltipItem, data)
+                const dataset = data.datasets[tooltipItem.datasetIndex]
+                return dataset.label + ': ' + dataset.data[tooltipItem.index].y.toFixed(1)
+              }
+            }
           }
         }
       })

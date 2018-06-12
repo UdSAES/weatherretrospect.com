@@ -49,6 +49,7 @@
         <v-select
           label="Größe"
           :items="voiSelectionItems"
+          v-model="selectedVoi"
         ></v-select>
       </v-flex>
     </v-layout>
@@ -67,6 +68,17 @@
 </template>
 
 <script>
+const voiConfigs = {
+  t_2m: {
+    scalingOffset: -273.15,
+    unit: '°C'
+  },
+  pmsl: {
+    scalingFactor: 0.01,
+    unit: 'hPa'
+  }
+}
+
 
 import SingleChart from '@/Components/SingleChart'
 import {loadCosmoData, loadReportData} from '@/data_loader.js'
@@ -78,7 +90,7 @@ export default {
   },
   data: function () {
     return {
-      date: null,
+      date: this.$moment().format('YYYY-MM-DD'),
       time: '00:00',
       menu2: false,
       //curveColors: ['#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000'],
@@ -89,7 +101,8 @@ export default {
       //borderDashs: [undefined, [2, 4], [4, 4], [6, 4], [8, 4], [10, 4], [12, 4], [14, 4], [16, 4], [18, 4]],
       borderDashs: [undefined],
       curves: [],
-      voiSelectionItems: ['Lufttemperatur']
+      voiSelectionItems: [{text: 'Lufttemperatur', value: 't_2m'}, {text: 'Luftdruck', value: 'pmsl'}],
+      selectedVoi: 't_2m'
     }
   },
 
@@ -99,7 +112,7 @@ export default {
     },
 
     async loadData () {
-      
+      const voiConfig = voiConfigs[this.selectedVoi]
       const dateTimeString = this.date + ', ' + this.time
       console.log(dateTimeString)
       const nowTimestamp = this.$moment(dateTimeString, 'YYYY-MM-DD, HH:mm')
@@ -108,12 +121,13 @@ export default {
       console.log('this.$moment', this.$moment)
       const curves = []
       let loadResult = await loadReportData({
-        voi: 't_2m',
-        scalingOffset: -273.15,
-        poiID: '10708',
+        voi: this.selectedVoi,
+        scalingFactor: voiConfig.scalingFactor,
+        scalingOffset: voiConfig.scalingOffset,
+        poiID: this.poi.id,
         startTimestamp: startTimestamp,
         endTimestamp: endTimestamp,
-        unit: '°C'
+        unit: voiConfig.unit
       })
       
       curves.push(loadResult)
@@ -130,19 +144,21 @@ export default {
         referenceMoment.subtract(3, 'hours')
       }
 
+      
       for (let i = 0; i < referenceTimestamps.length; i++) {
         const referenceTimestamp = referenceTimestamps[i]
         let loadResult 
         try {
           loadResult = await loadCosmoData({
-            voi: 't_2m',
-            scalingOffset: -273.15,
-            lon: 7.107712,
-            lat: 49.212803,
+            voi: this.selectedVoi,
+            scalingFactor: voiConfig.scalingFactor,
+            scalingOffset: voiConfig.scalingOffset,
+            lon: this.poi.lon,
+            lat: this.poi.lat,
             startTimestamp: startTimestamp,
             endTimestamp: endTimestamp,
             referenceTimestamp: referenceTimestamp,
-            unit: '°C'
+            unit: voiConfig.unit
           })
         } catch (error) {
           console.log(error)
@@ -165,7 +181,11 @@ export default {
   },
 
   props: {
-
+    poi: {
+      id: '10708',
+      lat: 50,
+      lon: 7.5
+    }
   },
 
   created: function () {
@@ -185,6 +205,17 @@ export default {
       }
     },
     time: {
+      handler: function () {
+        this.loadData()
+      }
+    },
+    poi: {
+      handler: function () {
+        this.loadData()
+      },
+      deep: true
+    },
+    selectedVoi: {
       handler: function () {
         this.loadData()
       }

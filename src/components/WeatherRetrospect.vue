@@ -25,8 +25,9 @@
     <v-layout>
       <v-flex xs12>
         <v-card class="elevation-6 mr-1 ml-1 mt-1"  height="429">
-          <weather-retrospect-diagram>
-          </weather-retrospect-diagram>
+          <weather-retrospect-diagram
+            :poi="poi"
+          ></weather-retrospect-diagram>
         </v-card>
       </v-flex>
     </v-layout>
@@ -52,6 +53,11 @@ export default {
   },
 
   props: {
+    poi: {
+      id: '10708',
+      lat: 50,
+      lon: 7.5
+    }
   },
 
   watch: {

@@ -3,8 +3,11 @@
     <v-content>
       <v-container fluid>
         <v-layout>
-          <v-flex xs1>
+          <v-flex xs2 fluid>
             <img src="./assets/logo.png">
+          </v-flex>
+          <v-flex xs2 fluid>
+            <img src="./assets/logo_uds.png">
           </v-flex>
         </v-layout>
         <v-layout>
@@ -45,8 +48,9 @@
         <v-layout>
           <v-flex xs12 class="elevation-6 mr-1 ml-1 mt-1">
             <v-card>
-              <weather-retrospect>
-              </weather-retrospect>
+              <weather-retrospect
+                :poi="selectedPoi"
+              ></weather-retrospect>
             </v-card>
           </v-flex>
         </v-layout>
@@ -108,7 +112,11 @@ export default {
     return {
       stationList: [],
       selectedPoiId: '10708',
-      selectedPoi: null,
+      selectedPoi: {
+        id: '10708',
+        lat: 50,
+        lon: 7.5
+      },
       staticLocationData: {
         id: '10708',
         addressString: 'super',
@@ -309,7 +317,7 @@ export default {
       
       
 
-      const referenceTimestamp = this.$moment.utc().startOf('day').add(6, 'hours').valueOf()
+      const referenceTimestamp = this.$moment.utc().startOf('day').add(3, 'hours').valueOf()
       
       let t_2m_COSMO
       try {
@@ -425,6 +433,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  background: #ffffff;
 }
 </style>
