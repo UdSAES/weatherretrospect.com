@@ -65,6 +65,7 @@ import StationMap from '@/Components/StationMap'
 import WeatherStationData from '@/Components/WeatherStationData'
 import CurrentForecastData from '@/Components/CurrentForecastData'
 import WeatherRetrospect from '@/Components/WeatherRetrospect'
+import {loadCosmoData, loadReportData, loadMosmixData} from '@/data_loader.js'
 
 function parseCsv (text) {
   let lines = text.split('\n')
@@ -102,7 +103,7 @@ export default {
           that.stationList = c
           console.log(that.stationList)
         }, 1000)
-        
+
       }
     }
     xhttp.open('GET', '/static/station_catalog.csv', true)
@@ -147,123 +148,12 @@ export default {
       this.selectedPoi = _.find(this.stationList, function (item) {
         return item.id === that.selectedPoiId
       })
-      
-      
+
+
       this.staticLocationData.id = this.selectedPoiId
       this.staticLocationData.coordinates.lat = this.selectedPoi.lat
       this.staticLocationData.coordinates.lon = this.selectedPoi.lon
       this.staticLocationData.coordinates.elev = this.selectedPoi.elev
-    },
-
-    async loadReportData (options) {
-      let {
-        voi,
-        scalingFactor,
-        scalingOffset,
-        poiID,
-        startTimestamp,
-        endTimestamp,
-        unit
-      } = options
-
-      scalingFactor = scalingFactor || 1
-      scalingOffset = scalingOffset || 0
-
-      let result = await this.$superagent.get('http://leela.msaas.me:12345/weather/weather_reports/poi/' + poiID + '/' + voi)
-      if (result.statusCode !== 200) {
-        // do something
-        return
-      }
-
-      _.remove(result.body.data, (item) => {
-        return item.timestamp < startTimestamp || item.timestamp >= endTimestamp
-      })
-
-      result.body.data = _.map(result.body.data, (item) => {
-        if (this.$_.isNil(item.value)) {
-          return item
-        }
-        return {timestamp: item.timestamp, value: item.value * scalingFactor + scalingOffset}
-      })
-
-      if (unit) {
-        result.body.unit = unit
-      }
-      
-      return result
-    },
-
-    async loadCosmoData (options) {
-      let {
-        voi,
-        scalingFactor,
-        scalingOffset,
-        lat,
-        lon,
-        startTimestamp,
-        endTimestamp,
-        referenceTimestamp,
-        unit
-      } = options
-
-      scalingFactor = scalingFactor || 1
-      scalingOffset = scalingOffset || 0
-
-      let result = await this.$superagent.get('http://leela.msaas.me:12345/weather/cosmo/d2/' + referenceTimestamp + '/' + voi + '?lon=' + lon + '&lat=' + lat)
-      if (result.statusCode !== 200) {
-        // do something
-        return
-      }
-
-      _.remove(result.body.data, (item) => {
-        return item.timestamp < startTimestamp || item.timestamp >= endTimestamp
-      })
-
-      result.body.data = _.map(result.body.data, (item) => {
-        return {timestamp: item.timestamp, value: item.value * scalingFactor + scalingOffset}
-      })
-
-      if (unit) {
-        result.body.unit = unit
-      }
-
-      return result
-    },
-
-    async loadMosmixData (options) {
-      let {
-        voi,
-        scalingFactor,
-        scalingOffset,
-        poiID,
-        startTimestamp,
-        endTimestamp,
-        referenceTimestamp,
-        unit
-      } = options
-
-      scalingFactor = scalingFactor || 1
-      scalingOffset = scalingOffset || 0
-      let result = await this.$superagent.get('http://leela.msaas.me:12345/weather/local_forecasts/poi/' + referenceTimestamp + '/' + poiID + '/' + voi)
-      console.log(result)
-      if (result.statusCode !== 200) {
-        
-        // do something
-        return
-      }
-
-      _.remove(result.body.data, (item) => {
-        return item.timestamp < startTimestamp || item.timestamp >= endTimestamp
-      })
-
-      result.body.data = _.map(result.body.data, (item) => {
-        return {timestamp: item.timestamp, value: item.value * scalingFactor + scalingOffset}
-      })
-
-      if (unit) {
-        result.body.unit = unit
-      }
-      return result
     },
 
     async loadCurrentData () {
@@ -271,10 +161,10 @@ export default {
       const now = this.$moment.utc()
       const oldesTimestamp = this.$moment.utc(now).subtract(6, 'hours').valueOf()
       const newestTimestamp = this.$moment.utc(oldesTimestamp).add(28, 'hours').valueOf()
-      
+
       let t_2m_REPORT
       try {
-        t_2m_REPORT = await this.loadReportData({
+        t_2m_REPORT = await loadReportData({
           voi: 't_2m',
           scalingOffset: -273.15,
           poiID: this.selectedPoiId,
@@ -286,11 +176,9 @@ export default {
         console.log(error)
       }
 
-      let result1 = t_2m_REPORT
-
       let pmsl_REPORT
       try {
-        pmsl_REPORT = await this.loadReportData({
+        pmsl_REPORT = await loadReportData({
           voi: 'pmsl',
           scalingFactor: 0.01,
           poiID: this.selectedPoiId,
@@ -301,10 +189,10 @@ export default {
       } catch (error) {
         console.log(error)
       }
-      
+
       let relhum_2m_REPORT
       try {
-        relhum_2m_REPORT = await this.loadReportData({
+        relhum_2m_REPORT = await loadReportData({
           voi: 'relhum_2m',
           scalingFactor: 100,
           poiID: this.selectedPoiId,
@@ -314,14 +202,14 @@ export default {
       } catch (error) {
         console.log(error)
       }
-      
-      
+
+
 
       const referenceTimestamp = this.$moment.utc().startOf('day').add(3, 'hours').valueOf()
-      
+
       let t_2m_COSMO
       try {
-        t_2m_COSMO = await this.loadCosmoData({
+        t_2m_COSMO = await loadCosmoData({
           voi: 't_2m',
           scalingOffset: -273.15,
           lat: this.selectedPoi.lat,
@@ -329,16 +217,15 @@ export default {
           referenceTimestamp: referenceTimestamp,
           startTimestamp: referenceTimestamp,
           endTimestamp: newestTimestamp + 1,
-          unit: '°C'          
+          unit: '°C'
         })
       } catch (error) {
         console.log(error)
       }
-      let result2 = t_2m_COSMO
 
       let pmsl_COSMO
       try {
-        pmsl_COSMO = await this.loadCosmoData({
+        pmsl_COSMO = await loadCosmoData({
           voi: 'pmsl',
           scalingFactor: 0.01,
           lat: this.selectedPoi.lat,
@@ -351,12 +238,12 @@ export default {
       } catch (error) {
         console.log(error)
       }
-      
+
       const localforecastReferenceTimestamp = this.$moment.utc().subtract(60, 'minutes').startOf('day').add(6, 'hours').valueOf()
 
       let t_2m_MOSMIX
       try {
-        t_2m_MOSMIX = await this.loadMosmixData({
+        t_2m_MOSMIX = await loadMosmixData({
           voi: 't_2m',
           scalingOffset: -273.15,
           poiID: this.selectedPoiId,
@@ -371,7 +258,7 @@ export default {
 
       let pmsl_MOSMIX
       try {
-        pmsl_MOSMIX = await this.loadMosmixData({
+        pmsl_MOSMIX = await loadMosmixData({
           voi: 'pmsl',
           scalingFactor: 0.01,
           poiID: this.selectedPoiId,
@@ -383,24 +270,24 @@ export default {
       } catch (error) {
         console.log(error)
       }
-      
-      t_2m_REPORT.body.label = t_2m_REPORT.body.label + '_REPORT'
-      t_2m_COSMO.body.label = t_2m_COSMO.body.label + '_COSMO'
-      t_2m_MOSMIX.body.label = t_2m_MOSMIX.body.label + '_MOSMIX'
-      pmsl_REPORT.body.label = pmsl_REPORT.body.label + '_REPORT'
-      pmsl_COSMO.body.label = pmsl_COSMO.body.label + '_COSMO'
-      pmsl_MOSMIX.body.label = pmsl_MOSMIX.body.label + '_MOSMIX'
-      
-      this.currentData = [t_2m_REPORT.body, t_2m_COSMO.body, t_2m_MOSMIX.body, pmsl_REPORT.body, pmsl_COSMO.body, pmsl_MOSMIX.body]
-      
-      this.currentReportData.timestamp = _.last(t_2m_REPORT.body.data).timestamp
-      this.currentReportData.t_2m = _.last(t_2m_REPORT.body.data).value
-      this.currentReportData.pmsl = _.last(pmsl_REPORT.body.data).value
-      this.currentReportData.relhum_2m = _.last(relhum_2m_REPORT.body.data).value
+
+      t_2m_REPORT.label = t_2m_REPORT.label + '_REPORT'
+      t_2m_COSMO.label = t_2m_COSMO.label + '_COSMO'
+      t_2m_MOSMIX.label = t_2m_MOSMIX.label + '_MOSMIX'
+      pmsl_REPORT.label = pmsl_REPORT.label + '_REPORT'
+      pmsl_COSMO.label = pmsl_COSMO.label + '_COSMO'
+      pmsl_MOSMIX.label = pmsl_MOSMIX.label + '_MOSMIX'
+
+      this.currentData = [t_2m_REPORT, t_2m_COSMO, t_2m_MOSMIX, pmsl_REPORT, pmsl_COSMO, pmsl_MOSMIX]
+
+      this.currentReportData.timestamp = _.last(t_2m_REPORT.data).timestamp
+      this.currentReportData.t_2m = _.last(t_2m_REPORT.data).value
+      this.currentReportData.pmsl = _.last(pmsl_REPORT.data).value
+      this.currentReportData.relhum_2m = _.last(relhum_2m_REPORT.data).value
 
       console.log(t_2m_COSMO)
-      this.cosmoLocation.lat = t_2m_COSMO.body.location.lat
-      this.cosmoLocation.lon = t_2m_COSMO.body.location.lon
+      this.cosmoLocation.lat = t_2m_COSMO.location.lat
+      this.cosmoLocation.lon = t_2m_COSMO.location.lon
 
       console.log(this.cosmoLocation)
 
@@ -420,7 +307,7 @@ export default {
   watch: {
     selectedPoiId () {
       this.loadCurrentData()
-      
+
     }
   }
 }

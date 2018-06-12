@@ -5,6 +5,7 @@ import _ from 'lodash'
 export async function loadCosmoData (options) {
   console.log(options)
   let {
+    origin,
     voi,
     scalingFactor,
     scalingOffset,
@@ -18,8 +19,9 @@ export async function loadCosmoData (options) {
 
   scalingFactor = scalingFactor || 1
   scalingOffset = scalingOffset || 0
+  origin = origin || 'http://leela.msaas.me:12345'
 
-  let result = await superagent.get('http://leela.msaas.me:12345/weather/cosmo/d2/' + referenceTimestamp + '/' + voi + '?lon=' + lon + '&lat=' + lat)
+  let result = await superagent.get(origin + '/weather/cosmo/d2/' + referenceTimestamp + '/' + voi + '?lon=' + lon + '&lat=' + lat)
   if (result.statusCode !== 200) {
     // do something
     return
@@ -45,6 +47,7 @@ export async function loadCosmoData (options) {
 
 export async function loadReportData (options) {
   let {
+    origin,
     voi,
     scalingFactor,
     scalingOffset,
@@ -56,8 +59,9 @@ export async function loadReportData (options) {
 
   scalingFactor = scalingFactor || 1
   scalingOffset = scalingOffset || 0
+  origin = origin || 'http://leela.msaas.me:12345'
 
-  let result = await superagent.get('http://leela.msaas.me:12345/weather/weather_reports/poi/' + poiID + '/' + voi + '?startTimestamp=' + startTimestamp + '&endTimestamp=' + endTimestamp)
+  let result = await superagent.get(origin + '/weather/weather_reports/poi/' + poiID + '/' + voi + '?startTimestamp=' + startTimestamp + '&endTimestamp=' + endTimestamp)
   console.log('result', result)
 
   if (result.statusCode !== 200) {
@@ -83,5 +87,44 @@ export async function loadReportData (options) {
     result.body.unit = unit
   }
 
+  return result.body
+}
+
+export async function loadMosmixData (options) {
+  let {
+    origin,
+    voi,
+    scalingFactor,
+    scalingOffset,
+    poiID,
+    startTimestamp,
+    endTimestamp,
+    referenceTimestamp,
+    unit
+  } = options
+
+  scalingFactor = scalingFactor || 1
+  scalingOffset = scalingOffset || 0
+  origin = origin || 'http://leela.msaas.me:12345'
+
+  let result = await superagent.get(origin + '/weather/local_forecasts/poi/' + referenceTimestamp + '/' + poiID + '/' + voi)
+  console.log(result)
+  if (result.statusCode !== 200) {
+
+    // do something
+    return
+  }
+
+  _.remove(result.body.data, (item) => {
+    return item.timestamp < startTimestamp || item.timestamp >= endTimestamp
+  })
+
+  result.body.data = _.map(result.body.data, (item) => {
+    return {timestamp: item.timestamp, value: item.value * scalingFactor + scalingOffset}
+  })
+
+  if (unit) {
+    result.body.unit = unit
+  }
   return result.body
 }
