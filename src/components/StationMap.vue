@@ -106,9 +106,16 @@ export default {
   
   mounted: function () {
     // this.redrawMap()
-    this.map = new google.maps.Map(this.$refs.map, {
-      zoom: 4,
-    })
+    const intervalId = setInterval((function () {
+      if (!google) {
+        return
+      }
+
+      this.map = new google.maps.Map(this.$refs.map, {
+        zoom: 4,
+      })
+      clearInterval(intervalId)
+    }).bind(this), 100)
   },
 
   props: {
