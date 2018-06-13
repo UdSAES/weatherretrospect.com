@@ -29,10 +29,10 @@
               <v-flex xs12 class="text-xs-left">
                 <h2>{{ $t('current_weather_conditions') }}</h2>
                 <p>
-                  {{ $t('time_of_acquisition') }}: {{ this.$moment(currentReportData.timestamp).format('DD.MM.YYYY, HH:mm') }} Uhr<br>
-                  {{ $t('air_temperature') }}: {{ currentReportData.t_2m.toFixed(1) }} °C<br>
-                  {{ $t('air_pressure') }}: {{ currentReportData.pmsl.toFixed(1) }} hPa<br>
-                  {{ $t('relative_humidity') }}: {{ currentReportData.relhum_2m.toFixed(1) }} %
+                  {{ $t('time_of_acquisition') }}: {{ (currentReportData.timestamp && this.$moment(currentReportData.timestamp).format('DD.MM.YYYY, HH:mm')) || '--' }} Uhr<br>
+                  {{ $t('air_temperature') }}: {{ (currentReportData.t_2m && currentReportData.t_2m.toFixed(1)) || '--' }} °C<br>
+                  {{ $t('air_pressure') }}: {{ (currentReportData.pmsl && currentReportData.pmsl.toFixed(1)) || '--' }} hPa<br>
+                  {{ $t('relative_humidity') }}: {{ (currentReportData.relhum_2m && currentReportData.relhum_2m.toFixed(1)) || '--' }} %
                 </p>
               </v-flex>
             </v-layout>
@@ -63,7 +63,7 @@ export default {
       type: Array
     },
     staticLocationData: {
-      addressString: ''
+      
     },
     currentReportData: {
 
