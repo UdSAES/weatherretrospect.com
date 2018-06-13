@@ -19,7 +19,7 @@ export async function loadCosmoData (options) {
 
   scalingFactor = scalingFactor || 1
   scalingOffset = scalingOffset || 0
-  origin = origin || 'http://leela.msaas.me:12345'
+  origin = origin || process.env.DWD_DATA_API_ORIGIN
 
   let result = await superagent.get(origin + '/weather/cosmo/d2/' + referenceTimestamp + '/' + voi + '?lon=' + lon + '&lat=' + lat)
   if (result.statusCode !== 200) {
@@ -59,7 +59,7 @@ export async function loadReportData (options) {
 
   scalingFactor = scalingFactor || 1
   scalingOffset = scalingOffset || 0
-  origin = origin || 'http://leela.msaas.me:12345'
+  origin = origin || process.env.DWD_DATA_API_ORIGIN
 
   let result = await superagent.get(origin + '/weather/weather_reports/poi/' + poiID + '/' + voi + '?startTimestamp=' + startTimestamp + '&endTimestamp=' + endTimestamp)
   console.log('result', result)
@@ -105,7 +105,7 @@ export async function loadMosmixData (options) {
 
   scalingFactor = scalingFactor || 1
   scalingOffset = scalingOffset || 0
-  origin = origin || 'http://leela.msaas.me:12345'
+  origin = origin || process.env.DWD_DATA_API_ORIGIN
 
   let result = await superagent.get(origin + '/weather/local_forecasts/poi/' + referenceTimestamp + '/' + poiID + '/' + voi)
   console.log(result)

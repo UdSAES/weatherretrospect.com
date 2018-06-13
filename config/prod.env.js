@@ -1,4 +1,6 @@
 'use strict'
 module.exports = {
-  NODE_ENV: '"production"'
+  NODE_ENV: '"production"',
+  // DWD_DATA_API_ORIGIN: '"http://leela.msaas.me:12345"'
+  DWD_DATA_API_ORIGIN: JSON.stringify(process.env.DWD_DATA_API_ORIGIN)
 }
