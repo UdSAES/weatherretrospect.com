@@ -2,13 +2,13 @@
   <v-container>
     <v-layout>
       <v-flex xs12 class="text-xs-left">
-        <h2>Aktuelle Prognosedaten</h2>
+        <h2>{{ $t('current_forecast_data') }}</h2>
         <div>
           <single-chart
-            style="width: 100%; height: 380px"
+            style="height: 390px"
             :curves="curves"
-            :leftAxisWidth="70"
-            :rightAxisWidth="70"
+            :leftAxisWidth="50"
+            :rightAxisWidth="50"
             :curveColors="curveColors"
             :borderDashs="borderDashs"
             leftAxisColor="#e52d1e"

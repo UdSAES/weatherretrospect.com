@@ -1,5 +1,7 @@
 <template>
-  <canvas ref="canvas"></canvas>
+  <div ref="parent" style="position: relative; width: 100%">
+    <canvas ref="canvas"></canvas>
+  </div>
 </template>
 <script>
 
@@ -29,13 +31,13 @@ export default {
     leftAxisWidth: {
       type: Number,
       default: function () {
-        return null
+        return 50
       }
     },
     rightAxisWidth: {
       type: Number,
       default: function () {
-        return null
+        return 50
       }
     },
     curveColors: {
@@ -75,7 +77,13 @@ export default {
       }
     }
   },
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this. handleWindowResize)
+  },
   methods: {
+    handleWindowResize () {
+      this.draw()
+    },
     draw () {
       console.log('draw called')
       const that = this
@@ -106,15 +114,11 @@ export default {
       })
 
       let canvasElement = this.$refs.canvas
-      
+      const width = canvasElement.style.width
+      const height = canvasElement.style.height
+      console.log('canvasElement', canvasElement, width, height)
       if (canvasElement.chart) {
-        const width = canvasElement.width
-        const height = canvasElement.height
         canvasElement.chart.destroy()
-        canvasElement = this.$refs.canvas
-        canvasElement.width = width
-        canvasElement.height = height
-        
       }
 
       let leftAxis = {
@@ -165,7 +169,8 @@ export default {
           animation: {
             duration: 100
           },
-          responsive: false,
+          responsive: true,
+          maintainAspectRatio: false,
           scales: {
             xAxes: [{
               type: 'time',
@@ -203,18 +208,13 @@ export default {
         }
       })
 
-      canvasElement.style.width = canvasElement.width + 'px'
-      canvasElement.style.height = canvasElement.height + 'px'
       canvasElement.chart = this.chart
     }
   },
 
-  computed: {
-
-  },
-
   mounted () {
     this.draw()
+    window.addEventListener('resize', this.handleWindowResize);
   },
 
   data: function () {

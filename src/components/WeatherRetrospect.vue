@@ -2,24 +2,40 @@
   <v-container fluid>
     <v-layout>
       <v-flex xs12 class="text-xs-left">
-        <h2>Wetternachhersage</h2>
+        <h2>{{ $t('weather_retrospect') }}</h2>
       </v-flex>
     </v-layout>
     <v-layout>
       <v-flex xs2 mr-1 ml-1>
         <v-select
-          label="Diagramme zeitlich koppeln"
+          :label="$t('share_start_time')"
           :items="binarySelectionItems"
-        ></v-select>
+          v-model="shareStartDate"
+        >
+          <template slot="selection" slot-scope="data">
+            {{ $t(data.item.text) }}
+          </template>
+          <template slot="item" slot-scope="data">
+            {{ $t(data.item.text) }}
+          </template>
+        </v-select>
       </v-flex>
       <v-flex xs2 mr-1 ml-1>
         <v-select
-          label="Diagramme bzgl. ausgewählter Prognose koppeln"
+          :label="$t('share_voi')"
           :items="binarySelectionItems"
-        ></v-select>
+          v-model="shareVoi"
+        >
+          <template slot="selection" slot-scope="data">
+            {{ $t(data.item.text) }}
+          </template>
+          <template slot="item" slot-scope="data">
+            {{ $t(data.item.text) }}
+          </template>
+        </v-select>
       </v-flex>
       <v-flex xs2 mr-1 ml-1>
-        <v-btn>Neues Diagramm hinzufügen</v-btn>
+        <v-btn>{{ $t('add_new_diagram') }}</v-btn>
       </v-flex>
     </v-layout>
     <v-layout>
@@ -43,8 +59,10 @@ export default {
   },
   data: function () {
     return {
-      binarySelectionItems: [{text: 'ja', value: true}, {text: 'nein', value: false}],
-      voiSelectionItems: [{text: 'ja', value: true}, {text: 'nein', value: false}]
+      binarySelectionItems: [{text: 'yes', value: true}, {text: 'no', value: false}],
+      voiSelectionItems: [{text: 'yes', value: true}, {text: 'no', value: false}],
+      shareStartDate: true,
+      shareVoi: false
     }
   },
 

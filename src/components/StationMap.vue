@@ -107,8 +107,7 @@ export default {
   mounted: function () {
     // this.redrawMap()
     this.map = new google.maps.Map(this.$refs.map, {
-      center: {lat: 0, lng: 0},
-      zoom: 4
+      zoom: 4,
     })
   },
 

@@ -1,18 +1,34 @@
 <template>
   <v-app>
+    <v-toolbar fixed app>
+      <v-layout align-center>
+          <v-flex xs4>
+            <v-layout justify-start>
+              <img src="./assets/logo.png" height="60px" style="margin: 10px">
+              <img src="./assets/logo_uds.png" height="60px" style="margin: 10px">
+              <img src="./assets/dwd_logo_258x69.png" height="60px" style="margin: 10px">
+            </v-layout justify-start>
+          </v-flex>
+          <v-flex xs6>
+          </v-flex>
+          <v-flex xs1>
+            <v-select
+              :label="$t('language')"
+              :items="languageItems"
+              v-model="selectedLanguage"
+              class="mt-4"
+            ></v-select>
+          </v-flex>
+          <v-flex xs1>
+            <v-btn href="https://www.uni-saarland.de/footer/dialog/impressum.html" flat block large style="padding: 0px; margin: 0px; height: 70px">{{ $t('imprint') }}</v-btn>
+          </v-flex>
+      </v-layout>
+    </v-toolbar>
     <v-content>
       <v-container fluid>
-        <v-layout>
-          <v-flex xs2 fluid>
-            <img src="./assets/logo.png">
-          </v-flex>
-          <v-flex xs2 fluid>
-            <img src="./assets/logo_uds.png">
-          </v-flex>
-        </v-layout>
-        <v-layout>
-          <v-flex xs4>
-            <v-card class="elevation-6 mr-1 ml-1">
+        <v-layout ref="secondRow" row>
+          <v-flex xs6>
+            <v-card class="elevation-6 mr-1 ml-1 mb-1">
               <station-map
                 :stationList="stationList"
                 :selectedPoiId="selectedPoiId"
@@ -21,17 +37,17 @@
               </station-map>
             </v-card>
           </v-flex>
-          <v-flex xs8>
+          <v-flex xs6>
             <v-layout>
-              <v-flex xs12>
-                <v-card class="elevation-6 mr-1 ml-1 mb-1">
+              <v-flex x12>
+                <v-card class="elevation-6 mr-1 ml-1 mt-1">
                   <weather-station-data
                     :staticLocationData="staticLocationData"
                     :currentReportData="currentReportData"
                   >
                   </weather-station-data>
                 </v-card>
-              </v-flex xs12>
+              </v-flex>
             </v-layout>
             <v-layout>
               <v-flex xs12>
@@ -56,7 +72,6 @@
         </v-layout>
       </v-container>
     </v-content>
-    <v-footer app></v-footer>
   </v-app>
 </template>
 
@@ -92,38 +107,29 @@ export default {
     CurrentForecastData,
     WeatherRetrospect
   },
+  
   created: function () {
-    var xhttp = new XMLHttpRequest()
-    const that = this
-    xhttp.onreadystatechange = function () {
-      if (this.readyState === 4 && this.status === 200) {
-        // Typical action to be performed when the document is ready:
-        const c = parseCsv(xhttp.responseText)
-        setTimeout(function () {
-          that.stationList = c
-          console.log(that.stationList)
-        }, 1000)
-
-      }
-    }
-    xhttp.open('GET', '/static/station_catalog.csv', true)
-    xhttp.send()
+    
+    this.$i18n.locale = this.selectedLanguage
+    window.addEventListener('resize', this.handleWindowResize)
   },
   data: function () {
     return {
+      languageItems: ['de_DE', 'en_US'],
+      selectedLanguage: window.INITIALLY_SELECTED_LANGUAGE,
       stationList: [],
-      selectedPoiId: '10708',
+      selectedPoiId: '',
       selectedPoi: {
-        id: '10708',
-        lat: 50,
-        lon: 7.5
+        id: '',
+        lat: 0,
+        lon: 0
       },
       staticLocationData: {
         id: '10708',
         addressString: '--',
         coordinates: {
-          lat: 50,
-          lon: 7,
+          lat: 0,
+          lon: 0,
           elev: 0
         }
       },
@@ -141,6 +147,19 @@ export default {
     }
   },
   methods: {
+    handleWindowResize: function () {
+      return
+      console.log('this.$refs.secondRow', this.$refs.secondRow)
+      if (this.$vuetify.breakpoint.xl) {
+        this.$refs.secondRow.classList.add('row')
+        this.$refs.secondRow.classList.remove('column')
+      } else {
+        this.$refs.secondRow.classList.add('column')
+        this.$refs.secondRow.classList.remove('row')
+      }
+      console.log('this.$refs.secondRow', this.$refs.secondRow)      
+    },
+
     changePoi (poi) {
       const that = this
       this.selectedPoiId = poi.id
@@ -148,7 +167,6 @@ export default {
       this.selectedPoi = _.find(this.stationList, function (item) {
         return item.id === that.selectedPoiId
       })
-
 
       this.staticLocationData.id = this.selectedPoiId
       this.staticLocationData.coordinates.lat = this.selectedPoi.lat
@@ -285,11 +303,9 @@ export default {
       this.currentReportData.pmsl = _.last(pmsl_REPORT.data).value
       this.currentReportData.relhum_2m = _.last(relhum_2m_REPORT.data).value
 
-      console.log(t_2m_COSMO)
+      
       this.cosmoLocation.lat = t_2m_COSMO.location.lat
       this.cosmoLocation.lon = t_2m_COSMO.location.lon
-
-      console.log(this.cosmoLocation)
 
       const google_map_pos = new google.maps.LatLng( this.selectedPoi.lat, this.selectedPoi.lon )
       const google_maps_geocoder = new google.maps.Geocoder()
@@ -304,10 +320,36 @@ export default {
       )
     }
   },
+  mounted: function () {
+    const that = this
+    this.$nextTick(function () {
+      var xhttp = new XMLHttpRequest()
+      const that = this
+      xhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+          // Typical action to be performed when the document is ready:
+          const c = parseCsv(xhttp.responseText)
+          setTimeout(function () {
+            that.stationList = c
+            that.changePoi({
+              id: '10708',
+              lat: 49.212803,
+              lon: 7.107712
+            })
+          }, 0)
+        }
+      }
+      xhttp.open('GET', '/static/station_catalog.csv', true)
+      xhttp.send()
+    })
+  },
   watch: {
     selectedPoiId () {
       this.loadCurrentData()
+    },
 
+    selectedLanguage () {
+      this.$i18n.locale = this.selectedLanguage
     }
   }
 }

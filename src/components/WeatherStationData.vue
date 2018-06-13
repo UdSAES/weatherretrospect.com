@@ -2,7 +2,7 @@
   <v-container>
     <v-layout>
       <v-flex xs12 class="text-xs-left">
-        <h2>Wetterstation {{ staticLocationData.id }}</h2>
+        <h2>{{ $t('weather_station')}} {{ staticLocationData.id }}</h2>
       </v-flex>
     </v-layout>
     <v-layout>
@@ -11,11 +11,11 @@
           <v-container>
             <v-layout>
               <v-flex xs12 class="text-xs-left">
-                <h2>Lage des Standorts</h2>
+                <h2>{{ $t('location') }}</h2>
                 <p>
                   {{ staticLocationData.addressString }}<br>
-                  {{ staticLocationData.coordinates.lat }} °N, {{ staticLocationData.coordinates.lon }} °O, {{ staticLocationData.coordinates.elev }} m ü. NHN<br>
-                  Zeitzone GMT+2
+                  {{ staticLocationData.coordinates.lat }} °N, {{ staticLocationData.coordinates.lon }} °O, {{ staticLocationData.coordinates.elev }} m {{ $t('above_sea_level') }}<br>
+                  {{ $t('timezone_gmtp2') }}
                 </p>
               </v-flex>
             </v-layout>
@@ -27,12 +27,12 @@
           <v-container>
            <v-layout>
               <v-flex xs12 class="text-xs-left">
-                <h2>Aktuelle Wetterlage</h2>
+                <h2>{{ $t('current_weather_conditions') }}</h2>
                 <p>
-                  Zeitpunkt der Erfassung: {{ this.$moment(currentReportData.timestamp).format('DD.MM.YYYY, HH:mm') }} Uhr<br>
-                  Lufttemperatur: {{ currentReportData.t_2m.toFixed(1) }} °C<br>
-                  Luftdruck: {{ currentReportData.pmsl.toFixed(1) }} hPa<br>
-                  Relative Luftfeuchtigkeit: {{ currentReportData.relhum_2m.toFixed(1) }} %
+                  {{ $t('time_of_acquisition') }}: {{ this.$moment(currentReportData.timestamp).format('DD.MM.YYYY, HH:mm') }} Uhr<br>
+                  {{ $t('air_temperature') }}: {{ currentReportData.t_2m.toFixed(1) }} °C<br>
+                  {{ $t('air_pressure') }}: {{ currentReportData.pmsl.toFixed(1) }} hPa<br>
+                  {{ $t('relative_humidity') }}: {{ currentReportData.relhum_2m.toFixed(1) }} %
                 </p>
               </v-flex>
             </v-layout>

@@ -15,7 +15,7 @@
           <v-text-field
             slot="activator"
             v-model="date"
-            label="Startdatum"
+            :label="$t('start_date')"
             prepend-icon="event"
             readonly
           ></v-text-field>
@@ -38,7 +38,7 @@
           <v-text-field
             slot="activator"
             v-model="time"
-            label="Startzeit"
+            :label="$t('start_time')"
             prepend-icon="access_time"
             readonly
           ></v-text-field>
@@ -47,16 +47,23 @@
       </v-flex>
       <v-flex xs2 mr-1 ml-1>
         <v-select
-          label="Größe"
+          :label="$t('value_of_interest')"
           :items="voiSelectionItems"
           v-model="selectedVoi"
-        ></v-select>
+        >
+          <template slot="selection" slot-scope="data">
+            {{ $t(data.item.text) }}
+          </template>
+          <template slot="item" slot-scope="data">
+            {{ $t(data.item.text) }}
+          </template>
+        </v-select>
       </v-flex>
     </v-layout>
     <v-layout>
       <v-flex xs12>
         <single-chart
-          style="width: 100%; height: 350px"
+          style="height: 350px"
           :curves="curves"
           :borderDashs="borderDashs"
           :curveColors="curveColors"
@@ -101,7 +108,7 @@ export default {
       //borderDashs: [undefined, [2, 4], [4, 4], [6, 4], [8, 4], [10, 4], [12, 4], [14, 4], [16, 4], [18, 4]],
       borderDashs: [undefined],
       curves: [],
-      voiSelectionItems: [{text: 'Lufttemperatur', value: 't_2m'}, {text: 'Luftdruck', value: 'pmsl'}],
+      voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}],
       selectedVoi: 't_2m'
     }
   },
