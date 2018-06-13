@@ -2,31 +2,32 @@
   <v-app>
     <v-toolbar fixed app>
       <v-layout align-center>
-          <v-flex xs4>
+          <v-flex xs7>
             <v-layout justify-start>
-              <img src="./assets/logo.png" height="60px" style="margin: 10px">
-              <img src="./assets/logo_uds.png" height="60px" style="margin: 10px">
-              <img src="./assets/dwd_logo_258x69.png" height="60px" style="margin: 10px">
+              <v-btn flat style="padding: 0px; height: 70px" href="https://www.uni-saarland.de/en/lehrstuhl/frey/start.html" target="_blank"><img src="./assets/logo.png" height="60px" style="margin: 10px"></v-btn>
+              <v-btn class="hidden-sm-and-down" flat style="padding: 0px; height: 70px" href="https://www.uni-saarland.de/en/lehrstuhl/frey/start.html" target="_blank"><img src="./assets/AES_logo.png" height="60px" style="margin: 10px"></v-btn>
+              <v-btn class="hidden-sm-and-down" flat style="padding: 0px; height: 70px" href="https://www.uni-saarland.de/nc/en/home.html" target="_blank"><img src="./assets/logo_uds_transparent.png" height="60px" style="margin: 10px"></v-btn>
+              <v-btn class="hidden-lg-and-up" flat style="padding: 0px; height: 70px" href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_40x69_transparent.png" height="60px" style="margin: 10px"></v-btn>
+              <v-btn class="hidden-md-and-down" flat style="padding: 0px; height: 70px" href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_258x69_transparent.png" height="60px" style="margin: 10px"></v-btn>
             </v-layout justify-start>
           </v-flex>
-          <v-flex xs6>
-          </v-flex>
-          <v-flex xs1>
-            <v-select
-              :label="$t('language')"
-              :items="languageItems"
-              v-model="selectedLanguage"
-              class="mt-4"
-            ></v-select>
-          </v-flex>
-          <v-flex xs1>
-            <v-btn href="https://www.uni-saarland.de/footer/dialog/impressum.html" flat block large style="padding: 0px; margin: 0px; height: 70px">{{ $t('imprint') }}</v-btn>
+          <v-flex xs5>
+            <v-layout row justify-end align-center>
+              <v-select
+                :label="$t('language')"
+                :items="languageItems"
+                v-model="selectedLanguage"
+                class="mt-4"
+                style="max-width: 200px"
+              ></v-select>
+              <v-btn href="https://www.uni-saarland.de/footer/dialog/impressum.html" flat style="padding: 0px; margin: 0px; height: 70px">{{ $t('imprint') }}</v-btn>
+            </v-layout>
           </v-flex>
       </v-layout>
     </v-toolbar>
     <v-content>
       <v-container fluid>
-        <v-layout ref="secondRow" row>
+        <v-layout ref="secondRow">
           <v-flex xs6>
             <v-card class="elevation-6 mr-1 ml-1 mb-1">
               <station-map
@@ -40,7 +41,7 @@
           <v-flex xs6>
             <v-layout>
               <v-flex x12>
-                <v-card class="elevation-6 mr-1 ml-1 mt-1">
+                <v-card class="elevation-6 mr-1 ml-1">
                   <weather-station-data
                     :staticLocationData="staticLocationData"
                     :currentReportData="currentReportData"
@@ -51,7 +52,7 @@
             </v-layout>
             <v-layout>
               <v-flex xs12>
-                <v-card class="elevation-6 mr-1 ml-1 mt-1"  height="429">
+                <v-card class="elevation-6 mr-1 ml-1 mt-1"  height="433">
                   <current-forecast-data
                     :timeseries="currentData"
                   >
@@ -148,8 +149,6 @@ export default {
   },
   methods: {
     handleWindowResize: function () {
-      return
-      console.log('this.$refs.secondRow', this.$refs.secondRow)
       if (this.$vuetify.breakpoint.xl) {
         this.$refs.secondRow.classList.add('row')
         this.$refs.secondRow.classList.remove('column')
@@ -157,7 +156,6 @@ export default {
         this.$refs.secondRow.classList.add('column')
         this.$refs.secondRow.classList.remove('row')
       }
-      console.log('this.$refs.secondRow', this.$refs.secondRow)      
     },
 
     changePoi (poi) {
@@ -221,10 +219,9 @@ export default {
         console.log(error)
       }
 
-
-
-      const referenceTimestamp = this.$moment.utc().startOf('day').add(3, 'hours').valueOf()
-
+      const nowTimestamp = now.valueOf()
+      let  referenceTimestamp = Math.floor((nowTimestamp) / (3 * 3600 * 1000)) * 3 * 3600 * 1000
+      console.log('referenceTime', this.$moment.utc(referenceTimestamp))
       let t_2m_COSMO
       try {
         t_2m_COSMO = await loadCosmoData({
@@ -239,6 +236,24 @@ export default {
         })
       } catch (error) {
         console.log(error)
+      }
+
+      if (!t_2m_COSMO) {
+        referenceTimestamp -= 3 * 3600 * 1000
+        try {
+          t_2m_COSMO = await loadCosmoData({
+            voi: 't_2m',
+            scalingOffset: -273.15,
+            lat: this.selectedPoi.lat,
+            lon: this.selectedPoi.lon,
+            referenceTimestamp: referenceTimestamp,
+            startTimestamp: referenceTimestamp,
+            endTimestamp: newestTimestamp + 1,
+            unit: '°C'
+          })
+        } catch (error) {
+          console.log(error)
+        }
       }
 
       let pmsl_COSMO

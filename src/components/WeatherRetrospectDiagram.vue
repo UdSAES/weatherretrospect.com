@@ -68,6 +68,7 @@
           :borderDashs="borderDashs"
           :curveColors="curveColors"
           :display-right-axis="false"
+          :maxInitialShowIndex="parseInt(0)"
         ></single-chart>
       </v-flex>
     </v-layout>
@@ -121,11 +122,10 @@ export default {
     async loadData () {
       const voiConfig = voiConfigs[this.selectedVoi]
       const dateTimeString = this.date + ', ' + this.time
-      console.log(dateTimeString)
       const nowTimestamp = this.$moment(dateTimeString, 'YYYY-MM-DD, HH:mm')
       const startTimestamp = this.$moment.utc(nowTimestamp).minutes(0).seconds(0).milliseconds(0).valueOf()
       const endTimestamp = this.$moment.utc(startTimestamp).add(25, 'hours').valueOf()
-      console.log('this.$moment', this.$moment)
+      
       const curves = []
       let loadResult = await loadReportData({
         voi: this.selectedVoi,

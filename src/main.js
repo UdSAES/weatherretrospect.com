@@ -34,7 +34,8 @@ const messages = {
     start_date: 'Start date',
     start_time: 'Start time',
     value_of_interest: 'Value of interest',
-    imprint: 'Imprint'
+    imprint: 'Imprint',
+    clock_empty: ''
   },
   de_DE: {
     language: 'Sprache',
@@ -57,7 +58,8 @@ const messages = {
     start_date: 'Startdatum',
     start_time: 'Startzeit',
     value_of_interest: 'Größe',
-    imprint: 'Impressum'
+    imprint: 'Impressum',
+    clock_empty: 'Uhr'
   }
 }
 

@@ -16,6 +16,11 @@ export default {
     }
   },
   props: {
+    maxInitialShowIndex: {
+      default: function () {
+        return null
+      }
+    },
     curves: {
       type: Array,
       default: function () {
@@ -109,7 +114,8 @@ export default {
           borderWidth: 2,
           yAxisID: curve.axis,
           borderDash: borderDashs[index],
-          borderCapStyle: 'butt'
+          borderCapStyle: 'butt',
+          hidden: this.maxInitialShowIndex !== null && index > this.maxInitialShowIndex
         }
       })
 
@@ -119,6 +125,7 @@ export default {
       console.log('canvasElement', canvasElement, width, height)
       if (canvasElement.chart) {
         canvasElement.chart.destroy()
+        canvasElement = this.$refs.canvas
       }
 
       let leftAxis = {
