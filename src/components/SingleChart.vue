@@ -89,12 +89,9 @@ export default {
       this.draw()
     },
     draw () {
-      console.log('draw called')
       const that = this
       const data = {}
 
-      // const colors = ['#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
-      // const colors = ['#e52d1e', '#e52d1e', '#e52d1e', '#3157a0', '#3157a0', '#3157a0', '#3157a0']
       const colors = this.curveColors
       const borderDashs = this.borderDashs
 
@@ -121,7 +118,6 @@ export default {
       let canvasElement = this.$refs.canvas
       const width = canvasElement.style.width
       const height = canvasElement.style.height
-      console.log('canvasElement', canvasElement, width, height)
       if (canvasElement.chart) {
         canvasElement.chart.destroy()
         canvasElement = this.$refs.canvas
@@ -162,12 +158,6 @@ export default {
         yAxes.push(rightAxis)
       }
 
-      console.log({
-        test: that.displayRightAxis
-      })
-
-      console.log('that.displayRightAxis', that.displayRightAxis, yAxes)
-
       this.chart = new Chart(canvasElement, {
         type: 'scatter',
         data: data,
@@ -187,10 +177,6 @@ export default {
                     return ''
                   }
 
-                  if (index === 0) {
-                    console.log(values)
-                  }
-
                   if (values[index].major) {
                     return that.$moment(values[index].value).format('DD.MM.YYYY HH:mm')
                   }
@@ -203,7 +189,6 @@ export default {
             mode: 'x',
             callbacks: {
               label: function (tooltipItem, data) {
-                console.log(tooltipItem, data)
                 const dataset = data.datasets[tooltipItem.datasetIndex]
                 return dataset.label + ': ' + dataset.data[tooltipItem.index].y.toFixed(1)
               }
