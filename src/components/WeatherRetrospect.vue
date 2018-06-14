@@ -5,7 +5,7 @@
         <h2>{{ $t('weather_retrospect') }}</h2>
       </v-flex>
     </v-layout>
-    <v-layout>
+    <!--<v-layout>
       <v-flex xs2 mr-1 ml-1>
         <v-select
           :label="$t('share_start_time')"
@@ -38,6 +38,7 @@
         <v-btn>{{ $t('add_new_diagram') }}</v-btn>
       </v-flex>
     </v-layout>
+    -->
     <v-layout>
       <v-flex xs12>
         <v-card class="elevation-6 mr-1 ml-1 mt-1"  height="429">
