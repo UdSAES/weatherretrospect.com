@@ -5,10 +5,7 @@
 <script>
 export default {
   name: 'StationMap',
-  beforeUpdate: function () {
-    console.log('beforeUpdate')
-  },
-
+  
   data: function () {
     return {
       map: null,
@@ -96,7 +93,6 @@ export default {
     redrawCosmoMarker () {
       if (this.cosmoMarker != null) {
         this.cosmoMarker.setMap(null)
-        console.log('remove')
       }
 
       this.cosmoMarker = new window.google.maps.Marker({

@@ -116,8 +116,6 @@ export default {
       })
 
       let canvasElement = this.$refs.canvas
-      const width = canvasElement.style.width
-      const height = canvasElement.style.height
       if (canvasElement.chart) {
         canvasElement.chart.destroy()
         canvasElement = this.$refs.canvas
