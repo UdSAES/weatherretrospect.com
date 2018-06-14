@@ -3,7 +3,6 @@ import superagent from 'superagent'
 import _ from 'lodash'
 
 export async function loadCosmoData (options) {
-  console.log(options)
   let {
     origin,
     voi,
