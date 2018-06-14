@@ -110,7 +110,6 @@ export async function loadMosmixData (options) {
   let result = await superagent.get(origin + '/weather/local_forecasts/poi/' + referenceTimestamp + '/' + poiID + '/' + voi)
   console.log(result)
   if (result.statusCode !== 200) {
-
     // do something
     return
   }

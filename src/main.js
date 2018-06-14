@@ -11,7 +11,6 @@ import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import VueI18n from 'vue-i18n'
 
-
 const messages = {
   en_US: {
     language: 'Language',
@@ -83,14 +82,12 @@ Vue.filter('getTextForCurrentLang', function (value) {
   return i18n.t(value)
 })
 
-
 const i18n = new VueI18n({
   locale: 'de_DE',
   messages: messages
 })
 
 Vue.config.productionTip = false
-
 
 /* eslint-disable no-new */
 new Vue({

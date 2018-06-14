@@ -11,8 +11,7 @@ export default {
   name: 'SingleChart',
   data () {
     return {
-      chart: null,
-      originalCanvas: ''
+      chart: null
     }
   },
   props: {
@@ -54,7 +53,7 @@ export default {
     borderDashs: {
       type: Array,
       default: function () {
-        return [[1,0]]
+        return [[1, 0]]
       }
     },
     leftAxisColor: {
@@ -83,7 +82,7 @@ export default {
     }
   },
   beforeDestroy: function () {
-    window.removeEventListener('resize', this. handleWindowResize)
+    window.removeEventListener('resize', this.handleWindowResize)
   },
   methods: {
     handleWindowResize () {
@@ -95,7 +94,7 @@ export default {
       const data = {}
 
       // const colors = ['#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
-      //const colors = ['#e52d1e', '#e52d1e', '#e52d1e', '#3157a0', '#3157a0', '#3157a0', '#3157a0']
+      // const colors = ['#e52d1e', '#e52d1e', '#e52d1e', '#3157a0', '#3157a0', '#3157a0', '#3157a0']
       const colors = this.curveColors
       const borderDashs = this.borderDashs
 
@@ -140,7 +139,7 @@ export default {
           fontColor: that.leftAxisColor
         }
       }
-      
+
       let rightAxis = {
         id: 'B',
         position: 'right',
@@ -168,7 +167,7 @@ export default {
       })
 
       console.log('that.displayRightAxis', that.displayRightAxis, yAxes)
-      
+
       this.chart = new Chart(canvasElement, {
         type: 'scatter',
         data: data,
@@ -195,8 +194,6 @@ export default {
                   if (values[index].major) {
                     return that.$moment(values[index].value).format('DD.MM.YYYY HH:mm')
                   }
-                  
-                  return
                 }
               }
             }],
@@ -221,12 +218,7 @@ export default {
 
   mounted () {
     this.draw()
-    window.addEventListener('resize', this.handleWindowResize);
-  },
-
-  data: function () {
-    return {
-    }
+    window.addEventListener('resize', this.handleWindowResize)
   },
 
   watch: {

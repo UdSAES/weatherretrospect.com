@@ -76,6 +76,9 @@
 </template>
 
 <script>
+import SingleChart from '@/Components/SingleChart'
+import {loadCosmoData, loadReportData} from '@/data_loader.js'
+
 const voiConfigs = {
   t_2m: {
     scalingOffset: -273.15,
@@ -86,10 +89,6 @@ const voiConfigs = {
     unit: 'hPa'
   }
 }
-
-
-import SingleChart from '@/Components/SingleChart'
-import {loadCosmoData, loadReportData} from '@/data_loader.js'
 console.log('loadCosmoData', loadCosmoData)
 export default {
   name: 'WeatherRetrospectDiagram',
@@ -101,12 +100,12 @@ export default {
       date: this.$moment().format('YYYY-MM-DD'),
       time: '00:00',
       menu2: false,
-      //curveColors: ['#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000'],
-      //curveColors: ['#185B85','#185B85','#185B85','#185B85','#185B85','#185B85','#185B85','#185B85', '#185B85'],
-      curveColors: ['#000000', 'rgba(24, 91, 133, 1)','rgba(24, 91, 133, 0.9)','rgba(24, 91, 133, 0.8)','rgba(24, 91, 133, 0.7)','rgba(24, 91, 133, 0.6)','rgba(24, 91, 133, 0.5)','rgba(24, 91, 133, 0.4)','rgba(24, 91, 133, 0.3)', 'rgba(24, 91, 133, 0.2)'],
-      //curveColors: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'],
+      // curveColors: ['#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000'],
+      // curveColors: ['#185B85','#185B85','#185B85','#185B85','#185B85','#185B85','#185B85','#185B85', '#185B85'],
+      curveColors: ['#000000', 'rgba(24, 91, 133, 1)', 'rgba(24, 91, 133, 0.9)', 'rgba(24, 91, 133, 0.8)', 'rgba(24, 91, 133, 0.7)', 'rgba(24, 91, 133, 0.6)', 'rgba(24, 91, 133, 0.5)', 'rgba(24, 91, 133, 0.4)', 'rgba(24, 91, 133, 0.3)', 'rgba(24, 91, 133, 0.2)'],
+      // curveColors: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'],
       // borderDashs: [undefined, [4, 2], [4, 4], [4, 6], [4, 8], [4, 10], [4, 12], [4, 14], [4, 18]],
-      //borderDashs: [undefined, [2, 4], [4, 4], [6, 4], [8, 4], [10, 4], [12, 4], [14, 4], [16, 4], [18, 4]],
+      // borderDashs: [undefined, [2, 4], [4, 4], [6, 4], [8, 4], [10, 4], [12, 4], [14, 4], [16, 4], [18, 4]],
       borderDashs: [undefined],
       curves: [],
       voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}],
@@ -125,7 +124,7 @@ export default {
       const nowTimestamp = this.$moment(dateTimeString, 'YYYY-MM-DD, HH:mm')
       const startTimestamp = this.$moment.utc(nowTimestamp).minutes(0).seconds(0).milliseconds(0).valueOf()
       const endTimestamp = this.$moment.utc(startTimestamp).add(25, 'hours').valueOf()
-      
+
       const curves = []
       let loadResult = await loadReportData({
         voi: this.selectedVoi,
@@ -136,25 +135,23 @@ export default {
         endTimestamp: endTimestamp,
         unit: voiConfig.unit
       })
-      
-      curves.push(loadResult)
 
+      curves.push(loadResult)
 
       const referenceTimestamps = []
       const minusHours = []
       let referenceMoment = this.$moment.utc(endTimestamp).minutes(0).seconds(0).milliseconds(0)
       const hoursModulo = referenceMoment.hours() % 3
       referenceMoment.subtract(hoursModulo, 'hours')
-      while(referenceTimestamps.length < 17) {
+      while (referenceTimestamps.length < 17) {
         minusHours.push(-hoursModulo - referenceTimestamps.length * 3)
         referenceTimestamps.push(referenceMoment.valueOf())
         referenceMoment.subtract(3, 'hours')
       }
 
-      
       for (let i = 0; i < referenceTimestamps.length; i++) {
         const referenceTimestamp = referenceTimestamps[i]
-        let loadResult 
+        let loadResult
         try {
           loadResult = await loadCosmoData({
             voi: this.selectedVoi,
@@ -173,15 +170,13 @@ export default {
         }
 
         let startHoursOffset = 25 + minusHours[i]
-        startHoursOffset = startHoursOffset >= 0 ? '+' + startHoursOffset: '' + startHoursOffset
+        startHoursOffset = startHoursOffset >= 0 ? '+' + startHoursOffset : '' + startHoursOffset
 
         let endHoursOffset = ((this.$_.last(loadResult.data).timestamp - startTimestamp) / 3600 / 1000)
-        endHoursOffset = endHoursOffset >= 0 ? '+' + endHoursOffset: '' + endHoursOffset
-
+        endHoursOffset = endHoursOffset >= 0 ? '+' + endHoursOffset : '' + endHoursOffset
 
         loadResult.label = loadResult.label + ' [' + startHoursOffset + 'h, ' + endHoursOffset + 'h]'
         curves.push(loadResult)
-
       }
       this.curves = curves
     }
@@ -201,10 +196,10 @@ export default {
     const basicColors = ['24,91,133', '0,168,120', '100,99,99', '0,0,0']
     const l = 8
     for (let i = 0; i < 20; i++) {
-      colors.push('rgba(' + basicColors[Math.floor(i/l)] + ',' + (1 - (i%l) *0.1) + ')')
+      colors.push('rgba(' + basicColors[Math.floor(i / l)] + ',' + (1 - (i % l) * 0.1) + ')')
     }
     this.curveColors = colors
-  }, 
+  },
   watch: {
     date: {
       handler: function () {

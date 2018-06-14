@@ -46,7 +46,7 @@
 <script>
 export default {
   name: 'WeatherStationData',
-  
+
   data: function () {
     return {
     }
@@ -63,12 +63,12 @@ export default {
       type: Array
     },
     staticLocationData: {
-      
+
     },
     currentReportData: {
 
     }
-  },
+  }
 }
 </script>
 

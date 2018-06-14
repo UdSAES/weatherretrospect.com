@@ -9,7 +9,7 @@
               <v-btn class="hidden-sm-and-down" flat style="padding: 0px; height: 70px" href="https://www.uni-saarland.de/nc/en/home.html" target="_blank"><img src="./assets/logo_uds_transparent.png" height="60px" style="margin: 10px"></v-btn>
               <v-btn class="hidden-lg-and-up" flat style="padding: 0px; height: 70px" href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_40x69_transparent.png" height="60px" style="margin: 10px"></v-btn>
               <v-btn class="hidden-md-and-down" flat style="padding: 0px; height: 70px" href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_258x69_transparent.png" height="60px" style="margin: 10px"></v-btn>
-            </v-layout justify-start>
+            </v-layout>
           </v-flex>
           <v-flex xs5>
             <v-layout row justify-end align-center>
@@ -58,7 +58,7 @@
                   >
                   </current-forecast-data>
                 </v-card>
-              </v-flex xs12>
+              </v-flex>
             </v-layout>
           </v-flex>
         </v-layout>
@@ -82,6 +82,7 @@ import WeatherStationData from '@/Components/WeatherStationData'
 import CurrentForecastData from '@/Components/CurrentForecastData'
 import WeatherRetrospect from '@/Components/WeatherRetrospect'
 import {loadCosmoData, loadReportData, loadMosmixData} from '@/data_loader.js'
+import _ from 'lodash'
 
 function parseCsv (text) {
   let lines = text.split('\n')
@@ -108,9 +109,8 @@ export default {
     CurrentForecastData,
     WeatherRetrospect
   },
-  
+
   created: function () {
-    
     this.$i18n.locale = this.selectedLanguage
     window.addEventListener('resize', this.handleWindowResize)
   },
@@ -140,11 +140,11 @@ export default {
         pmsl: 0,
         relhum_2m: 0
       },
-      currentData: [{label: '1', unit: 'K', data: [0,0]}],
+      currentData: [{label: '1', unit: 'K', data: [0, 0]}],
       cosmoLocation: {
         lat: 7.5,
         lon: 50
-      },
+      }
     }
   },
   methods: {
@@ -220,7 +220,7 @@ export default {
       }
 
       const nowTimestamp = now.valueOf()
-      let  referenceTimestamp = Math.floor((nowTimestamp) / (3 * 3600 * 1000)) * 3 * 3600 * 1000
+      let referenceTimestamp = Math.floor((nowTimestamp) / (3 * 3600 * 1000)) * 3 * 3600 * 1000
       console.log('referenceTime', this.$moment.utc(referenceTimestamp))
       let t_2m_COSMO
       try {
@@ -318,25 +318,23 @@ export default {
       this.currentReportData.pmsl = _.last(pmsl_REPORT.data).value
       this.currentReportData.relhum_2m = _.last(relhum_2m_REPORT.data).value
 
-      
       this.cosmoLocation.lat = t_2m_COSMO.location.lat
       this.cosmoLocation.lon = t_2m_COSMO.location.lon
 
-      const google_map_pos = new google.maps.LatLng( this.selectedPoi.lat, this.selectedPoi.lon )
-      const google_maps_geocoder = new google.maps.Geocoder()
+      const google_map_pos = new window.google.maps.LatLng(this.selectedPoi.lat, this.selectedPoi.lon)
+      const google_maps_geocoder = new window.google.maps.Geocoder()
       google_maps_geocoder.geocode(
         { 'latLng': google_map_pos },
-        function( results, status ) {
-          if ( status == google.maps.GeocoderStatus.OK && results[0] ) {
+        function (results, status) {
+          if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
             that.staticLocationData.addressString = results[0].formatted_address
-            console.log( results[0].formatted_address )
+            console.log(results[0].formatted_address)
           }
         }
       )
     }
   },
   mounted: function () {
-    const that = this
     this.$nextTick(function () {
       var xhttp = new XMLHttpRequest()
       const that = this

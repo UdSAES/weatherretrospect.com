@@ -27,20 +27,19 @@ export default {
     },
 
     redrawMap () {
-      console.log('redrawMap')
       if (!(window.google && this.map)) {
-        setTimeout((function(){
+        setTimeout(function () {
           this.redrawMap()
-        }).bind(this), 100)
+        }.bind(this), 100)
         return
       }
 
-      const bounds = new google.maps.LatLngBounds()
+      const bounds = new window.google.maps.LatLngBounds()
       const pois = this.stationList
       this.markers = []
       for (let i = 0; i < pois.length; i++) {
         const poi = pois[i]
-        
+
         const point = {
           lat: poi.lat,
           lng: poi.lon
@@ -48,16 +47,16 @@ export default {
 
         bounds.extend(point)
         let marker
-        
+
         if (poi.id === this.selectedPoiId) {
-          marker = new google.maps.Marker({
+          marker = new window.google.maps.Marker({
             position: point,
             map: this.map,
             poi: poi,
             icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
           })
         } else {
-          marker = new google.maps.Marker({
+          marker = new window.google.maps.Marker({
             position: point,
             map: this.map,
             poi: poi,
@@ -68,15 +67,15 @@ export default {
         this.markers.push(marker)
 
         const that = this
-        function ah(marker) {
-          marker.addListener('click', (function () {
+        const ah = function (marker) {
+          marker.addListener('click', function () {
             that.handleMarkerClick(poi)
-          }))
+          })
         }
-      
+
         ah(marker)
       }
-      
+
       this.map.fitBounds(bounds, {
         bottom: 25,
         left: 10,
@@ -100,7 +99,7 @@ export default {
         console.log('remove')
       }
 
-      this.cosmoMarker = new google.maps.Marker({
+      this.cosmoMarker = new window.google.maps.Marker({
         position: {
           lat: this.cosmoLocation.lat,
           lng: this.cosmoLocation.lon
@@ -110,19 +109,19 @@ export default {
       })
     }
   },
-  
+
   mounted: function () {
     // this.redrawMap()
-    const intervalId = setInterval((function () {
+    const intervalId = setInterval(function () {
       if (!window.google) {
         return
       }
 
-      this.map = new google.maps.Map(this.$refs.map, {
-        zoom: 4,
+      this.map = new window.google.maps.Map(this.$refs.map, {
+        zoom: 4
       })
       clearInterval(intervalId)
-    }).bind(this), 100)
+    }.bind(this), 100)
   },
 
   props: {
@@ -135,9 +134,11 @@ export default {
     },
     cosmoLocation: {
       type: Object,
-      default: {
-        lat: 7.5,
-        lon: 50
+      default: function () {
+        return {
+          lat: 7.5,
+          lon: 50
+        }
       }
     }
   },
