@@ -62,7 +62,6 @@ export async function loadReportData (options) {
   origin = origin || process.env.DWD_DATA_API_ORIGIN
 
   let result = await superagent.get(origin + '/weather/weather_reports/poi/' + poiID + '/' + voi + '?startTimestamp=' + startTimestamp + '&endTimestamp=' + endTimestamp)
-  console.log('result', result)
 
   if (result.statusCode !== 200) {
     // do something
@@ -108,7 +107,6 @@ export async function loadMosmixData (options) {
   origin = origin || process.env.DWD_DATA_API_ORIGIN
 
   let result = await superagent.get(origin + '/weather/local_forecasts/poi/' + referenceTimestamp + '/' + poiID + '/' + voi)
-  console.log(result)
   if (result.statusCode !== 200) {
     // do something
     return
