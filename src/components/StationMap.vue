@@ -5,7 +5,7 @@
 <script>
 export default {
   name: 'StationMap',
-  
+
   data: function () {
     return {
       map: null,

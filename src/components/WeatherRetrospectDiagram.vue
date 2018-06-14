@@ -89,7 +89,7 @@ const voiConfigs = {
     unit: 'hPa'
   }
 }
-console.log('loadCosmoData', loadCosmoData)
+
 export default {
   name: 'WeatherRetrospectDiagram',
   components: {
@@ -165,7 +165,7 @@ export default {
             unit: voiConfig.unit
           })
         } catch (error) {
-          console.log(error)
+          console.error(error)
           continue
         }
 
