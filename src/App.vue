@@ -189,7 +189,7 @@ export default {
           unit: '°C'
         })
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
 
       let pmsl_REPORT
@@ -203,7 +203,7 @@ export default {
           unit: 'hPa'
         })
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
 
       let relhum_2m_REPORT
@@ -216,12 +216,11 @@ export default {
           endTimestamp: newestTimestamp + 1
         })
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
 
       const nowTimestamp = now.valueOf()
       let referenceTimestamp = Math.floor((nowTimestamp) / (3 * 3600 * 1000)) * 3 * 3600 * 1000
-      console.log('referenceTime', this.$moment.utc(referenceTimestamp))
       let t_2m_COSMO
       try {
         t_2m_COSMO = await loadCosmoData({
@@ -235,7 +234,7 @@ export default {
           unit: '°C'
         })
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
 
       if (!t_2m_COSMO) {
@@ -252,7 +251,7 @@ export default {
             unit: '°C'
           })
         } catch (error) {
-          console.log(error)
+          console.error(error)
         }
       }
 
@@ -269,7 +268,7 @@ export default {
           unit: 'hPa'
         })
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
 
       const localforecastReferenceTimestamp = this.$moment.utc().subtract(60, 'minutes').startOf('day').add(6, 'hours').valueOf()
@@ -286,7 +285,7 @@ export default {
           unit: '°C'
         })
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
 
       let pmsl_MOSMIX
@@ -301,7 +300,7 @@ export default {
           unit: 'hPa'
         })
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
 
       t_2m_REPORT.label = t_2m_REPORT.label + '_REPORT'
@@ -328,7 +327,6 @@ export default {
         function (results, status) {
           if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
             that.staticLocationData.addressString = results[0].formatted_address
-            console.log(results[0].formatted_address)
           }
         }
       )
