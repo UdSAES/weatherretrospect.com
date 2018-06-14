@@ -4,8 +4,8 @@
       <v-layout align-center>
           <v-flex xs7>
             <v-layout justify-start>
-              <v-btn flat style="padding: 0px; height: 70px" href="https://www.uni-saarland.de/en/lehrstuhl/frey/start.html" target="_blank"><img src="./assets/logo.png" height="60px" style="margin: 10px"></v-btn>
-              <v-btn class="hidden-sm-and-down" flat style="padding: 0px; height: 70px" href="https://www.uni-saarland.de/en/lehrstuhl/frey/start.html" target="_blank"><img src="./assets/AES_logo.png" height="60px" style="margin: 10px"></v-btn>
+              <v-btn flat style="padding: 0px; height: 70px" target="_blank"><img src="./assets/logo.png" height="60px" style="margin: 10px"></v-btn>
+              <v-btn flat style="padding: 0px; height: 70px" href="https://www.uni-saarland.de/en/lehrstuhl/frey/start.html" target="_blank"><img src="./assets/AES_logo.png" height="60px" style="margin: 10px"></v-btn>
               <v-btn class="hidden-sm-and-down" flat style="padding: 0px; height: 70px" href="https://www.uni-saarland.de/nc/en/home.html" target="_blank"><img src="./assets/logo_uds_transparent.png" height="60px" style="margin: 10px"></v-btn>
               <v-btn class="hidden-lg-and-up" flat style="padding: 0px; height: 70px" href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_40x69_transparent.png" height="60px" style="margin: 10px"></v-btn>
               <v-btn class="hidden-md-and-down" flat style="padding: 0px; height: 70px" href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_258x69_transparent.png" height="60px" style="margin: 10px"></v-btn>
@@ -20,7 +20,7 @@
                 class="mt-4"
                 style="max-width: 200px"
               ></v-select>
-              <v-btn href="https://www.uni-saarland.de/footer/dialog/impressum.html" flat style="padding: 0px; margin: 0px; height: 70px">{{ $t('imprint') }}</v-btn>
+              <v-btn href="https://www.uni-saarland.de/footer/dialog/impressum.html" target="_blank" flat style="padding: 0px; margin: 0px; height: 70px">{{ $t('imprint') }}</v-btn>
             </v-layout>
           </v-flex>
       </v-layout>

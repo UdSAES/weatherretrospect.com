@@ -28,6 +28,13 @@ export default {
 
     redrawMap () {
       console.log('redrawMap')
+      if (!(window.google && this.map)) {
+        setTimeout((function(){
+          this.redrawMap()
+        }).bind(this), 100)
+        return
+      }
+
       const bounds = new google.maps.LatLngBounds()
       const pois = this.stationList
       this.markers = []
@@ -107,7 +114,7 @@ export default {
   mounted: function () {
     // this.redrawMap()
     const intervalId = setInterval((function () {
-      if (!google) {
+      if (!window.google) {
         return
       }
 
