@@ -27,7 +27,7 @@
     </v-toolbar>
     <v-content>
       <v-container fluid>
-        <v-layout ref="secondRow">
+        <v-layout v-bind="binding">
           <v-flex xs6>
             <v-card class="elevation-6 mr-1 ml-1 mb-1">
               <station-map
@@ -109,11 +109,24 @@ export default {
     CurrentForecastData,
     WeatherRetrospect
   },
+  computed: {
+    binding: function () {
+      const binding = {}
+
+      if (this.$vuetify.breakpoint.xl) {
+        binding.column = false
+      } else {
+        binding.column = true
+      }
+
+      return binding
+    }
+  },
 
   created: function () {
     this.$i18n.locale = this.selectedLanguage
-    window.addEventListener('resize', this.handleWindowResize)
   },
+
   data: function () {
     return {
       languageItems: ['de_DE', 'en_US'],
@@ -148,16 +161,6 @@ export default {
     }
   },
   methods: {
-    handleWindowResize: function () {
-      if (this.$vuetify.breakpoint.xl) {
-        this.$refs.secondRow.classList.add('row')
-        this.$refs.secondRow.classList.remove('column')
-      } else {
-        this.$refs.secondRow.classList.add('column')
-        this.$refs.secondRow.classList.remove('row')
-      }
-    },
-
     changePoi (poi) {
       const that = this
       this.selectedPoiId = poi.id

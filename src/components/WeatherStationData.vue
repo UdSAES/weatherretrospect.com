@@ -5,7 +5,7 @@
         <h2>{{ $t('weather_station')}} {{ staticLocationData.id }}</h2>
       </v-flex>
     </v-layout>
-    <v-layout>
+    <v-layout v-bind="binding">
       <v-flex xs6>
         <v-card class="elevation-6 mr-1 ml-1 text-xs-left" height="150">
           <v-container>
@@ -23,7 +23,7 @@
         </v-card>
       </v-flex>
       <v-flex xs6>
-        <v-card class="elevation-6 mr-1 ml-1" height="150">
+        <v-card class="elevation-6 mr-1 ml-1" height="150" :class="{'mt-1': !showHorizontal}">
           <v-container>
            <v-layout>
               <v-flex xs12 class="text-xs-left">
@@ -46,6 +46,20 @@
 <script>
 export default {
   name: 'WeatherStationData',
+
+  computed: {
+    binding: function () {
+      const binding = {}
+
+      binding.column = !this.showHorizontal
+      
+      return binding
+    },
+
+    showHorizontal: function () {
+      return this.$vuetify.breakpoint.mdAndUp
+    }
+  },
 
   data: function () {
     return {
