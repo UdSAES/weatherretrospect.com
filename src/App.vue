@@ -1,5 +1,7 @@
 <template>
+
   <v-app>
+
     <v-toolbar fixed app>
       <v-layout align-center>
           <v-flex xs7>
@@ -26,6 +28,8 @@
       </v-layout>
     </v-toolbar>
     <v-content>
+      <intro-dialog>
+      </intro-dialog>
       <v-container fluid>
         <v-layout v-bind="binding">
           <v-flex xs6>
@@ -77,11 +81,12 @@
 </template>
 
 <script>
-import StationMap from '@/Components/StationMap'
-import WeatherStationData from '@/Components/WeatherStationData'
-import CurrentForecastData from '@/Components/CurrentForecastData'
-import WeatherRetrospect from '@/Components/WeatherRetrospect'
+import StationMap from '@/components/StationMap'
+import WeatherStationData from '@/components/WeatherStationData'
+import CurrentForecastData from '@/components/CurrentForecastData'
+import WeatherRetrospect from '@/components/WeatherRetrospect'
 import {loadCosmoData, loadReportData, loadMosmixData} from '@/data_loader.js'
+import IntroDialog from '@/components/IntroDialog'
 import _ from 'lodash'
 
 function parseCsv (text) {
@@ -107,7 +112,8 @@ export default {
     StationMap,
     WeatherStationData,
     CurrentForecastData,
-    WeatherRetrospect
+    WeatherRetrospect,
+    IntroDialog
   },
   computed: {
     binding: function () {
