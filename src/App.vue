@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <intro-dialog :language="language">
+    <intro-dialog ref="introDialog" :language="selectedLanguage">
     </intro-dialog>
     <v-toolbar fixed app>
       <v-layout align-center>

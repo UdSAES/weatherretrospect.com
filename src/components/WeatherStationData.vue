@@ -50,9 +50,7 @@ export default {
   computed: {
     binding: function () {
       const binding = {}
-
       binding.column = !this.showHorizontal
-      
       return binding
     },
 
