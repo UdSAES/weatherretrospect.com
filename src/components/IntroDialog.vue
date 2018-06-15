@@ -27,7 +27,7 @@ export default {
     }
   },
   props: {
-    // language: 'de_DE'
+    language: 'de_DE'
   }
 }
 </script>

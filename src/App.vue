@@ -1,7 +1,7 @@
 <template>
-
   <v-app>
-
+    <intro-dialog :language="language">
+    </intro-dialog>
     <v-toolbar fixed app>
       <v-layout align-center>
           <v-flex xs7>
@@ -28,8 +28,6 @@
       </v-layout>
     </v-toolbar>
     <v-content>
-      <intro-dialog>
-      </intro-dialog>
       <v-container fluid>
         <v-layout v-bind="binding">
           <v-flex xs6>
