@@ -41,7 +41,7 @@
     -->
     <v-layout>
       <v-flex xs12>
-        <v-card class="elevation-6 mr-1 ml-1 mt-1"  height="429">
+        <v-card class="elevation-6 mr-1 ml-1 mt-1">
           <weather-retrospect-diagram
             :poi="poi"
           ></weather-retrospect-diagram>

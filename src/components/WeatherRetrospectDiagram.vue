@@ -63,7 +63,7 @@
     <v-layout>
       <v-flex xs12>
         <single-chart
-          style="height: 350px"
+          style="height: 450px"
           :curves="curves"
           :borderDashs="borderDashs"
           :curveColors="curveColors"
