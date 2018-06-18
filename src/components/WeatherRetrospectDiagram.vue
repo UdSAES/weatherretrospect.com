@@ -60,15 +60,24 @@
         </v-select>
       </v-flex>
     </v-layout>
-    <v-layout>
-      <v-flex xs12>
+    <v-layout >
+      <v-flex xs12 style="height: 450px" v-if="!loading">
         <single-chart
-          style="height: 450px"
+            style="height: 450px"
           :curves="curves"
           :borderDashs="borderDashs"
           :curveColors="curveColors"
           :display-right-axis="false"
         ></single-chart>
+      </v-flex>
+      <v-flex xs12 style="height: 450px" v-if="loading">
+        <v-layout justify-center align-center style="height: 100%">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+            :size="100"
+          ></v-progress-circular>
+        </v-layout>
       </v-flex>
     </v-layout>
   </v-container>
@@ -77,6 +86,8 @@
 <script>
 import SingleChart from '@/Components/SingleChart'
 import {loadCosmoData, loadReportData} from '@/data_loader.js'
+import * as Parallel from 'async-parallel'
+import _ from 'lodash'
 
 const voiConfigs = {
   t_2m: {
@@ -86,6 +97,10 @@ const voiConfigs = {
   pmsl: {
     scalingFactor: 0.01,
     unit: 'hPa'
+  },
+  relhum_2m: {
+    scalingFactor: 100,
+    unit: '%'
   }
 }
 
@@ -102,8 +117,9 @@ export default {
       curveColors: ['#000000', 'rgba(24, 91, 133, 1)', 'rgba(24, 91, 133, 0.9)', 'rgba(24, 91, 133, 0.8)', 'rgba(24, 91, 133, 0.7)', 'rgba(24, 91, 133, 0.6)', 'rgba(24, 91, 133, 0.5)', 'rgba(24, 91, 133, 0.4)', 'rgba(24, 91, 133, 0.3)', 'rgba(24, 91, 133, 0.2)'],
       borderDashs: [undefined],
       curves: [],
-      voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}],
-      selectedVoi: 't_2m'
+      voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}, {text: 'relative_humidity', value: 'relhum_2m'}],
+      selectedVoi: 't_2m',
+      loading: false
     }
   },
 
@@ -113,6 +129,7 @@ export default {
     },
 
     async loadData () {
+      this.loading = true
       const voiConfig = voiConfigs[this.selectedVoi]
       const dateTimeString = this.date + ', ' + this.time
       const nowTimestamp = this.$moment(dateTimeString, 'YYYY-MM-DD, HH:mm')
@@ -120,21 +137,27 @@ export default {
       const endTimestamp = this.$moment.utc(startTimestamp).add(25, 'hours').valueOf()
 
       const curves = []
-      let loadResult = await loadReportData({
-        voi: this.selectedVoi,
-        scalingFactor: voiConfig.scalingFactor,
-        scalingOffset: voiConfig.scalingOffset,
-        poiID: this.poi.id,
-        startTimestamp: startTimestamp,
-        endTimestamp: endTimestamp,
-        unit: voiConfig.unit
-      })
 
-      curves.push(loadResult)
+      let loadResult
+      try {
+        loadResult = await loadReportData({
+          voi: this.selectedVoi,
+          scalingFactor: voiConfig.scalingFactor,
+          scalingOffset: voiConfig.scalingOffset,
+          poiID: this.poi.id,
+          startTimestamp: startTimestamp,
+          endTimestamp: endTimestamp,
+          unit: voiConfig.unit
+        })
+        curves.push(loadResult)
+      } catch (error) {
+        console.error(error)
+      }
 
       // if forecasts shall not be shown, we stop right here
       if (!this.showForecasts) {
         this.curves = curves
+        this.loading = false
         return
       }
 
@@ -149,8 +172,12 @@ export default {
         referenceMoment.subtract(3, 'hours')
       }
 
-      for (let i = 0; i < referenceTimestamps.length; i++) {
-        const referenceTimestamp = referenceTimestamps[i]
+      let index = -1
+      let forecastCurves = []
+      await Parallel.each(referenceTimestamps, async function (referenceTimestamp) {
+        index++
+        const i = index
+
         let loadResult
         try {
           loadResult = await loadCosmoData({
@@ -166,7 +193,7 @@ export default {
           })
         } catch (error) {
           console.error(error)
-          continue
+          return
         }
 
         let startHoursOffset = 25 + minusHours[i]
@@ -176,9 +203,15 @@ export default {
         endHoursOffset = endHoursOffset >= 0 ? '+' + endHoursOffset : '' + endHoursOffset
 
         loadResult.label = loadResult.label + ' [' + startHoursOffset + 'h, ' + endHoursOffset + 'h]'
-        curves.push(loadResult)
-      }
-      this.curves = curves
+        forecastCurves.push(loadResult)
+      }.bind(this), 24)
+
+      forecastCurves = _.sortBy(forecastCurves, (curve) => {
+        return curve.data[0].timestamp
+      })
+
+      this.curves = _.concat(curves, forecastCurves)
+      this.loading = false
     }
   },
 
