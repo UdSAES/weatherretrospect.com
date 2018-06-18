@@ -17,6 +17,15 @@
           </single-chart>
         </div>
       </v-flex>
+      <v-flex xs12 style="height: 390px" v-if="loading">
+        <v-layout justify-center align-center style="height: 100%">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+            :size="100"
+          ></v-progress-circular>
+        </v-layout>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -32,7 +41,8 @@ export default {
     return {
       curves: [],
       curveColors: ['#e52d1e', '#e52d1e', '#e52d1e', '#00a878', '#00a878', '#00a878', '#00a878'],
-      borderDashs: [undefined, [7, 7], [3, 3], undefined, [7, 7], [3, 3]]
+      borderDashs: [undefined, [7, 7], [3, 3], undefined, [7, 7], [3, 3]],
+      loading: false
     }
   },
 

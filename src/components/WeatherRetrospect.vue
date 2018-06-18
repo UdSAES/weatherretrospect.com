@@ -38,27 +38,12 @@
       <v-flex xs2 mr-1 ml-1>
         <v-btn>{{ $t('add_new_diagram') }}</v-btn>
       </v-flex>-->
-      <v-flex xs2 mr-1 ml-1>
-        <v-select
-          :label="$t('show_forecasts')"
-          :items="binarySelectionItems"
-          v-model="showForecasts"
-        >
-          <template slot="selection" slot-scope="data">
-            {{ $t(data.item.text) }}
-          </template>
-          <template slot="item" slot-scope="data">
-            {{ $t(data.item.text) }}
-          </template>
-        </v-select>
-      </v-flex>
     </v-layout>
    <v-layout>
       <v-flex xs12>
         <v-card class="elevation-6 mr-1 ml-1 mt-1">
           <weather-retrospect-diagram
             :poi="poi"
-            :showForecasts="showForecasts"
           ></weather-retrospect-diagram>
         </v-card>
       </v-flex>
@@ -78,8 +63,7 @@ export default {
       binarySelectionItems: [{text: 'yes', value: true}, {text: 'no', value: false}],
       voiSelectionItems: [{text: 'yes', value: true}, {text: 'no', value: false}],
       shareStartDate: true,
-      shareVoi: false,
-      showForecasts: false
+      shareVoi: false
     }
   },
 

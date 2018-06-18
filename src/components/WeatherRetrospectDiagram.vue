@@ -1,7 +1,7 @@
 <template>
-  <v-container fluid>
-    <v-layout>
-      <v-flex xs2 mr-1 ml-1>
+  <v-container>
+    <v-layout v-bind="binding">
+      <v-flex xs3 mr-1 ml-1>
         <v-menu
           ref="menu1"
           :close-on-content-click="true"
@@ -22,7 +22,7 @@
           <v-date-picker v-model="date"></v-date-picker>
         </v-menu>
       </v-flex>
-      <v-flex xs2 mr-1 ml-1>
+      <v-flex xs3 mr-1 ml-1>
         <v-menu
           ref="menu2"
           :close-on-content-click="false"
@@ -45,11 +45,25 @@
           <v-time-picker v-model="time" @input="$refs.menu2.save(time)" format="24hr" :allowed-minutes="allowedMinutes"></v-time-picker>
         </v-menu>
       </v-flex>
-      <v-flex xs2 mr-1 ml-1>
+      <v-flex xs3 mr-1 ml-1>
         <v-select
           :label="$t('value_of_interest')"
           :items="voiSelectionItems"
           v-model="selectedVoi"
+        >
+          <template slot="selection" slot-scope="data">
+            {{ $t(data.item.text) }}
+          </template>
+          <template slot="item" slot-scope="data">
+            {{ $t(data.item.text) }}
+          </template>
+        </v-select>
+      </v-flex>
+      <v-flex xs3 mr-1 ml-1>
+        <v-select
+          :label="$t('show_forecasts')"
+          :items="binarySelectionItems"
+          v-model="showForecasts"
         >
           <template slot="selection" slot-scope="data">
             {{ $t(data.item.text) }}
@@ -126,8 +140,22 @@ export default {
   components: {
     SingleChart
   },
+  computed: {
+    binding: function () {
+      const binding = {}
+
+      if (this.$vuetify.breakpoint.xs) {
+        binding.column = true
+      } else {
+        binding.column = false
+      }
+
+      return binding
+    }
+  },
   data: function () {
     return {
+      binarySelectionItems: [{text: 'yes', value: true}, {text: 'no', value: false}],
       date: this.$moment().format('YYYY-MM-DD'),
       time: '00:00',
       menu2: false,
@@ -136,7 +164,8 @@ export default {
       curves: [],
       voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}, {text: 'relative_humidity', value: 'relhum_2m'}, {text: 'diffuse_radiation', value: 'aswdifd_s'}, {text: 'direct_radiation', value: 'aswdir_s'}, {text: 'dew_point', value: 'td_2m'}, {text: 'wind_speed', value: 'ws_10m'}, {text: 'wind_direction', value: 'wd_10m'}],
       selectedVoi: 't_2m',
-      loading: false
+      loading: false,
+      showForecasts: false
     }
   },
 
@@ -237,12 +266,6 @@ export default {
       id: '10708',
       lat: 50,
       lon: 7.5
-    },
-    showForecasts: {
-      type: Boolean,
-      default: function () {
-        return false
-      }
     }
   },
 

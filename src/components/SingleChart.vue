@@ -157,10 +157,6 @@ export default {
           animation: {
             duration: 100
           },
-          /*legend: {
-            onClick: function () {
-            }
-          },*/
           maintainAspectRatio: false,
           responsive: true,
           scales: {
