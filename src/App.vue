@@ -4,16 +4,17 @@
     </intro-dialog>
     <v-toolbar fixed app>
       <v-layout align-center>
-          <v-flex xs7>
-            <v-layout justify-start>
-              <v-btn flat style="padding: 0px; height: 70px" target="_blank"><img src="./assets/logo.png" height="60px" style="margin: 10px"></v-btn>
-              <v-btn flat style="padding: 0px; height: 70px" href="https://www.uni-saarland.de/en/lehrstuhl/frey/start.html" target="_blank"><img src="./assets/AES_logo.png" height="60px" style="margin: 10px"></v-btn>
-              <v-btn class="hidden-sm-and-down" flat style="padding: 0px; height: 70px" href="https://www.uni-saarland.de/nc/en/home.html" target="_blank"><img src="./assets/logo_uds_transparent.png" height="60px" style="margin: 10px"></v-btn>
-              <v-btn class="hidden-lg-and-up" flat style="padding: 0px; height: 70px" href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_40x69_transparent.png" height="60px" style="margin: 10px"></v-btn>
-              <v-btn class="hidden-md-and-down" flat style="padding: 0px; height: 70px" href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_258x69_transparent.png" height="60px" style="margin: 10px"></v-btn>
+          <v-flex xs6>
+            <v-layout align-center justify-start>
+              <a flat href="https://www.uni-saarland.de/en/lehrstuhl/frey/start.html" target="_blank" style="height: 100%"><img src="./assets/logo.png" style="padding: 0px; height: 55px"></a>
+              <a class="hidden-sm-and-down" flat href="https://www.uni-saarland.de/nc/en/home.html" target="_blank"><img src="./assets/logo_uds_transparent.png" style="padding: 0px; height: 55px"></a>
+              <a class="hidden-md-and-up" flat href="https://www.uni-saarland.de/nc/en/home.html" target="_blank"><img src="./assets/logo_uds_transparent_128x128.png" style="padding: 0px; height: 55px"></a>
+              <a class="hidden-sm-and-down" flat href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_258x69_transparent.png" style="padding: 0px; height: 55px"></a>
+              <a class="hidden-md-and-up" flat href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_40x69_transparent.png" style="padding: 0px; height: 55px"></a>
+              
             </v-layout>
           </v-flex>
-          <v-flex xs5>
+          <v-flex xs6>
             <v-layout row justify-end align-center>
               <v-select
                 :label="$t('language')"
@@ -381,5 +382,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   background: #ffffff;
+}
+
+a {
+  padding-left: 5px;
+  padding-right: 5px;
 }
 </style>
