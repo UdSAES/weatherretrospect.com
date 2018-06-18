@@ -8,7 +8,7 @@
             <v-layout align-center justify-start>
               <a flat href="https://www.uni-saarland.de/en/lehrstuhl/frey/start.html" target="_blank" style="height: 100%"><img src="./assets/logo.png" style="padding: 0px; height: 55px"></a>
               <a class="hidden-sm-and-down" flat href="https://www.uni-saarland.de/nc/en/home.html" target="_blank"><img src="./assets/logo_uds_transparent.png" style="padding: 0px; height: 55px"></a>
-              <a class="hidden-md-and-up" flat href="https://www.uni-saarland.de/nc/en/home.html" target="_blank"><img src="./assets/logo_uds_transparent_128x128.png" style="padding: 0px; height: 55px"></a>
+              <a class="hidden-xs-only hidden-md-and-up" flat href="https://www.uni-saarland.de/nc/en/home.html" target="_blank"><img src="./assets/logo_uds_transparent_128x128.png" style="padding: 0px; height: 55px"></a>
               <a class="hidden-sm-and-down" flat href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_258x69_transparent.png" style="padding: 0px; height: 55px"></a>
               <a class="hidden-md-and-up" flat href="https://www.dwd.de/EN/ourservices/opendata/opendata.html" target="_blank"><img src="./assets/dwd_logo_40x69_transparent.png" style="padding: 0px; height: 55px"></a>
               
