@@ -68,7 +68,6 @@
           :borderDashs="borderDashs"
           :curveColors="curveColors"
           :display-right-axis="false"
-          :maxInitialShowIndex="parseInt(0)"
         ></single-chart>
       </v-flex>
     </v-layout>
@@ -100,12 +99,7 @@ export default {
       date: this.$moment().format('YYYY-MM-DD'),
       time: '00:00',
       menu2: false,
-      // curveColors: ['#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000','#ff0000'],
-      // curveColors: ['#185B85','#185B85','#185B85','#185B85','#185B85','#185B85','#185B85','#185B85', '#185B85'],
       curveColors: ['#000000', 'rgba(24, 91, 133, 1)', 'rgba(24, 91, 133, 0.9)', 'rgba(24, 91, 133, 0.8)', 'rgba(24, 91, 133, 0.7)', 'rgba(24, 91, 133, 0.6)', 'rgba(24, 91, 133, 0.5)', 'rgba(24, 91, 133, 0.4)', 'rgba(24, 91, 133, 0.3)', 'rgba(24, 91, 133, 0.2)'],
-      // curveColors: ['#000000','#000000','#000000','#000000','#000000','#000000','#000000','#000000'],
-      // borderDashs: [undefined, [4, 2], [4, 4], [4, 6], [4, 8], [4, 10], [4, 12], [4, 14], [4, 18]],
-      // borderDashs: [undefined, [2, 4], [4, 4], [6, 4], [8, 4], [10, 4], [12, 4], [14, 4], [16, 4], [18, 4]],
       borderDashs: [undefined],
       curves: [],
       voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}],
@@ -137,6 +131,12 @@ export default {
       })
 
       curves.push(loadResult)
+
+      // if forecasts shall not be shown, we stop right here
+      if (!this.showForecasts) {
+        this.curves = curves
+        return
+      }
 
       const referenceTimestamps = []
       const minusHours = []
@@ -187,6 +187,12 @@ export default {
       id: '10708',
       lat: 50,
       lon: 7.5
+    },
+    showForecasts: {
+      type: Boolean,
+      default: function () {
+        return false
+      }
     }
   },
 
@@ -218,6 +224,11 @@ export default {
       deep: true
     },
     selectedVoi: {
+      handler: function () {
+        this.loadData()
+      }
+    },
+    showForecasts: {
       handler: function () {
         this.loadData()
       }

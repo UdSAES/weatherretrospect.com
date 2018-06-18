@@ -15,11 +15,6 @@ export default {
     }
   },
   props: {
-    maxInitialShowIndex: {
-      default: function () {
-        return null
-      }
-    },
     curves: {
       type: Array,
       default: function () {
@@ -110,8 +105,7 @@ export default {
           borderWidth: 2,
           yAxisID: curve.axis,
           borderDash: borderDashs[index],
-          borderCapStyle: 'butt',
-          hidden: this.maxInitialShowIndex !== null && index > this.maxInitialShowIndex
+          borderCapStyle: 'butt'
         }
       })
 
@@ -163,8 +157,12 @@ export default {
           animation: {
             duration: 100
           },
-          responsive: true,
+          legend: {
+            onClick: function () {
+            }
+          },
           maintainAspectRatio: false,
+          responsive: true,
           scales: {
             xAxes: [{
               type: 'time',

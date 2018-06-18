@@ -34,7 +34,8 @@ const messages = {
     start_time: 'Start time',
     value_of_interest: 'Value of interest',
     imprint: 'Imprint',
-    clock_empty: ''
+    clock_empty: '',
+    show_forecasts: 'Show forecasts'
   },
   de_DE: {
     language: 'Sprache',
@@ -58,7 +59,8 @@ const messages = {
     start_time: 'Startzeit',
     value_of_interest: 'Größe',
     imprint: 'Impressum',
-    clock_empty: 'Uhr'
+    clock_empty: 'Uhr',
+    show_forecasts: 'Vorhersagen anzeigen'
   }
 }
 

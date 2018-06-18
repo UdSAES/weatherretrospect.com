@@ -31,7 +31,6 @@ export default {
   data: function () {
     return {
       curves: [],
-      // curveColors: ['#e52d1e', '#e52d1e', '#e52d1e', '#3157a0', '#3157a0', '#3157a0', '#3157a0'],
       curveColors: ['#e52d1e', '#e52d1e', '#e52d1e', '#00a878', '#00a878', '#00a878', '#00a878'],
       borderDashs: [undefined, [7, 7], [3, 3], undefined, [7, 7], [3, 3]]
     }
