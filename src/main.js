@@ -38,7 +38,9 @@ const messages = {
     show_forecasts: 'Show forecasts',
     diffuse_radiation: 'Diffuse radiation',
     direct_radiation: 'Direct radiation',
-    dew_point: 'Dew point'
+    dew_point: 'Dew point',
+    wind_speed: 'Wind speed',
+    wind_direction: 'Wind direction'
   },
   de_DE: {
     language: 'Sprache',
@@ -66,7 +68,9 @@ const messages = {
     show_forecasts: 'Vorhersagen anzeigen',
     diffuse_radiation: 'Diffuse Strahlung',
     direct_radiation: 'Direkte radiation',
-    dew_point: 'Dew point'
+    dew_point: 'Dew point',
+    wind_speed: 'Windgeschwindigkeit',
+    wind_direction: 'Windrichtung'
   }
 }
 

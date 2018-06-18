@@ -111,6 +111,13 @@ const voiConfigs = {
   td_2m: {
     scalingOffset: -273.15,
     unit: '°C'
+  },
+  ws_10m: {
+    scalingFactor: 3.6,
+    unit: 'km/h'
+  },
+  wd_10m: {
+    unit: '°'
   }
 }
 
@@ -127,7 +134,7 @@ export default {
       curveColors: ['#000000', 'rgba(24, 91, 133, 1)', 'rgba(24, 91, 133, 0.9)', 'rgba(24, 91, 133, 0.8)', 'rgba(24, 91, 133, 0.7)', 'rgba(24, 91, 133, 0.6)', 'rgba(24, 91, 133, 0.5)', 'rgba(24, 91, 133, 0.4)', 'rgba(24, 91, 133, 0.3)', 'rgba(24, 91, 133, 0.2)'],
       borderDashs: [undefined],
       curves: [],
-      voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}, {text: 'relative_humidity', value: 'relhum_2m'}, {text: 'diffuse_radiation', value: 'aswdifd_s'}, {text: 'direct_radiation', value: 'aswdir_s'}, {text: 'dew_point', value: 'td_2m'}],
+      voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}, {text: 'relative_humidity', value: 'relhum_2m'}, {text: 'diffuse_radiation', value: 'aswdifd_s'}, {text: 'direct_radiation', value: 'aswdir_s'}, {text: 'dew_point', value: 'td_2m'}, {text: 'wind_speed', value: 'ws_10m'}, {text: 'wind_direction', value: 'wd_10m'}],
       selectedVoi: 't_2m',
       loading: false
     }
