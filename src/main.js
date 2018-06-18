@@ -35,7 +35,10 @@ const messages = {
     value_of_interest: 'Value of interest',
     imprint: 'Imprint',
     clock_empty: '',
-    show_forecasts: 'Show forecasts'
+    show_forecasts: 'Show forecasts',
+    diffuse_radiation: 'Diffuse radiation',
+    direct_radiation: 'Direct radiation',
+    dew_point: 'Dew point'
   },
   de_DE: {
     language: 'Sprache',
@@ -60,7 +63,10 @@ const messages = {
     value_of_interest: 'Größe',
     imprint: 'Impressum',
     clock_empty: 'Uhr',
-    show_forecasts: 'Vorhersagen anzeigen'
+    show_forecasts: 'Vorhersagen anzeigen',
+    diffuse_radiation: 'Diffuse Strahlung',
+    direct_radiation: 'Direkte radiation',
+    dew_point: 'Dew point'
   }
 }
 

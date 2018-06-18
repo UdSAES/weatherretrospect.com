@@ -101,6 +101,16 @@ const voiConfigs = {
   relhum_2m: {
     scalingFactor: 100,
     unit: '%'
+  },
+  aswdifd_s: {
+    unit: 'W/m²'
+  },
+  aswdir_s: {
+    unit: 'W/m²'
+  },
+  td_2m: {
+    scalingOffset: -273.15,
+    unit: '°C'
   }
 }
 
@@ -117,7 +127,7 @@ export default {
       curveColors: ['#000000', 'rgba(24, 91, 133, 1)', 'rgba(24, 91, 133, 0.9)', 'rgba(24, 91, 133, 0.8)', 'rgba(24, 91, 133, 0.7)', 'rgba(24, 91, 133, 0.6)', 'rgba(24, 91, 133, 0.5)', 'rgba(24, 91, 133, 0.4)', 'rgba(24, 91, 133, 0.3)', 'rgba(24, 91, 133, 0.2)'],
       borderDashs: [undefined],
       curves: [],
-      voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}, {text: 'relative_humidity', value: 'relhum_2m'}],
+      voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}, {text: 'relative_humidity', value: 'relhum_2m'}, {text: 'diffuse_radiation', value: 'aswdifd_s'}, {text: 'direct_radiation', value: 'aswdir_s'}, {text: 'dew_point', value: 'td_2m'}],
       selectedVoi: 't_2m',
       loading: false
     }
