@@ -68,7 +68,7 @@ const messages = {
     show_forecasts: 'Vorhersagen anzeigen',
     diffuse_radiation: 'Diffuse Strahlung',
     direct_radiation: 'Direkte radiation',
-    dew_point: 'Dew point',
+    dew_point: 'Taupunkt',
     wind_speed: 'Windgeschwindigkeit',
     wind_direction: 'Windrichtung'
   }
