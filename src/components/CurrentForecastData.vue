@@ -7,12 +7,15 @@
           <single-chart
             style="height: 390px"
             :curves="curves"
-            :leftAxisWidth="50"
-            :rightAxisWidth="50"
+            leftAxisLabel="°C"
+            :leftAxisWidth="70"
+            rightAxisLabel="hPa"
+            :rightAxisWidth="70"
             :curveColors="curveColors"
             :borderDashs="borderDashs"
             leftAxisColor="#e52d1e"
             rightAxisColor="#00a878"
+            :showLegend="showLegend"
           >
           </single-chart>
         </div>
@@ -36,6 +39,15 @@ export default {
   name: 'CurrentForecastData',
   components: {
     SingleChart
+  },
+  computed: {
+    showLegend: function () {
+      if (this.$vuetify.breakpoint.xs) {
+        return false
+      }
+
+      return true
+    }
   },
   data: function () {
     return {

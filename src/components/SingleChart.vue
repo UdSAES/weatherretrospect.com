@@ -27,10 +27,46 @@ export default {
         ]
       }
     },
+    displayLeftAxis: {
+      type: Boolean,
+      default: function () {
+        return true
+      }
+    },
+    displayRightAxis: {
+      type: Boolean,
+      default: function () {
+        return true
+      }
+    },
+    leftAxisColor: {
+      type: String,
+      default: function () {
+        return '#888888'
+      }
+    },
+    rightAxisColor: {
+      type: String,
+      default: function () {
+        return '#888888'
+      }
+    },
+    leftAxisLabel: {
+      type: String,
+      default: function () {
+        return null
+      }
+    },
     leftAxisWidth: {
       type: Number,
       default: function () {
         return 50
+      }
+    },
+    rightAxisLabel: {
+      type: String,
+      default: function () {
+        return null
       }
     },
     rightAxisWidth: {
@@ -51,25 +87,7 @@ export default {
         return [[1, 0]]
       }
     },
-    leftAxisColor: {
-      type: String,
-      default: function () {
-        return '#888888'
-      }
-    },
-    rightAxisColor: {
-      type: String,
-      default: function () {
-        return '#888888'
-      }
-    },
-    displayLeftAxis: {
-      type: Boolean,
-      default: function () {
-        return true
-      }
-    },
-    displayRightAxis: {
+    showLegend: {
       type: Boolean,
       default: function () {
         return true
@@ -115,6 +133,18 @@ export default {
         canvasElement = this.$refs.canvas
       }
 
+      let leftAxisScaleLabel
+      if (this.leftAxisLabel != null) {
+        leftAxisScaleLabel = {
+          display: true,
+          labelString: this.leftAxisLabel
+        }
+      } else {
+        leftAxisScaleLabel = {
+          display: false
+        }
+      }
+
       let leftAxis = {
         id: 'A',
         position: 'left',
@@ -123,11 +153,23 @@ export default {
             scaleInstance.width = that.leftAxisWidth
           }
         },
+        scaleLabel: leftAxisScaleLabel,
         ticks: {
           fontColor: that.leftAxisColor
         }
       }
 
+      let rightAxisScaleLabel
+      if (this.rightAxisLabel != null) {
+        rightAxisScaleLabel = {
+          display: true,
+          labelString: this.rightAxisLabel
+        }
+      } else {
+        rightAxisScaleLabel = {
+          display: false
+        }
+      }
       let rightAxis = {
         id: 'B',
         position: 'right',
@@ -136,6 +178,7 @@ export default {
             scaleInstance.width = that.rightAxisWidth
           }
         },
+        scaleLabel: rightAxisScaleLabel,
         ticks: {
           fontColor: that.rightAxisColor
         }
@@ -156,6 +199,9 @@ export default {
         options: {
           animation: {
             duration: 100
+          },
+          legend: {
+            display: this.showLegend
           },
           maintainAspectRatio: false,
           responsive: true,

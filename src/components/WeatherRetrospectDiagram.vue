@@ -82,6 +82,9 @@
           :borderDashs="borderDashs"
           :curveColors="curveColors"
           :display-right-axis="false"
+          :leftAxisLabel="leftAxisLabel"
+          :leftAxisWidth="80"
+          :showLegend="showLegend"
         ></single-chart>
       </v-flex>
       <v-flex xs12 style="height: 450px" v-if="loading">
@@ -151,6 +154,13 @@ export default {
       }
 
       return binding
+    },
+    showLegend: function () {
+      if (this.$vuetify.breakpoint.xs) {
+        return false
+      }
+
+      return true
     }
   },
   data: function () {
@@ -165,7 +175,8 @@ export default {
       voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}, {text: 'relative_humidity', value: 'relhum_2m'}, {text: 'diffuse_radiation', value: 'aswdifd_s'}, {text: 'direct_radiation', value: 'aswdir_s'}, {text: 'dew_point', value: 'td_2m'}, {text: 'wind_speed', value: 'ws_10m'}, {text: 'wind_direction', value: 'wd_10m'}],
       selectedVoi: 't_2m',
       loading: false,
-      showForecasts: false
+      showForecasts: false,
+      leftAxisLabel: '°C'
     }
   },
 
@@ -183,6 +194,7 @@ export default {
       const endTimestamp = this.$moment.utc(startTimestamp).add(25, 'hours').valueOf()
 
       const curves = []
+      this.leftAxisLabel = voiConfig.unit
 
       let loadResult
       try {
