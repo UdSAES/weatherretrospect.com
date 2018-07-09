@@ -50,14 +50,14 @@ export default {
             position: point,
             map: this.map,
             poi: poi,
-            icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+            icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
           })
         } else {
           marker = new window.google.maps.Marker({
             position: point,
             map: this.map,
             poi: poi,
-            icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+            icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
           })
         }
 
@@ -83,10 +83,10 @@ export default {
     redrawMarkers () {
       for (let i = 0; i < this.markers.length; i++) {
         const marker = this.markers[i]
-        if (marker.poi.id === this.selectedPoiId && marker.icon !== 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png') {
-          marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')
-        } else if (marker.poi.id !== this.selectedPoiId && marker.icon !== 'http://maps.google.com/mapfiles/ms/icons/red-dot.png') {
-          marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png')
+        if (marker.poi.id === this.selectedPoiId && marker.icon !== 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png') {
+          marker.setIcon('https://maps.google.com/mapfiles/ms/icons/blue-dot.png')
+        } else if (marker.poi.id !== this.selectedPoiId && marker.icon !== 'https://maps.google.com/mapfiles/ms/icons/red-dot.png') {
+          marker.setIcon('https://maps.google.com/mapfiles/ms/icons/red-dot.png')
         }
       }
     },
@@ -101,7 +101,7 @@ export default {
           lng: this.cosmoLocation.lon
         },
         map: this.map,
-        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
       })
     }
   },
