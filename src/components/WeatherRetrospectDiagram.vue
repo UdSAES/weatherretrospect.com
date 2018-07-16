@@ -180,7 +180,7 @@ export default {
       showForecasts: false,
       leftAxisLabel: '°C',
       xAxisMinValue: null,
-      xAxisMaxValue: null,
+      xAxisMaxValue: null
     }
   },
 
@@ -190,7 +190,6 @@ export default {
     },
 
     async loadData () {
-      
       this.loading = true
       const voiConfig = voiConfigs[this.selectedVoi]
       const dateTimeString = this.date + ', ' + this.time
@@ -211,7 +210,7 @@ export default {
           scalingOffset: voiConfig.scalingOffset,
           poiID: this.poi.id,
           startTimestamp: startTimestamp,
-          endTimestamp: endTimestamp+1,
+          endTimestamp: endTimestamp + 1,
           unit: voiConfig.unit
         })
         loadResult.label = 'Measured'
@@ -221,7 +220,7 @@ export default {
       }
 
       for (let i = 6; i >= -1; i--) {
-        const referenceTimestamp = this.$moment.utc(nowTimestamp).hours(6).subtract(i*24, 'hours').minutes(0).seconds(0).milliseconds(0).valueOf()
+        const referenceTimestamp = this.$moment.utc(nowTimestamp).hours(6).subtract(i * 24, 'hours').minutes(0).seconds(0).milliseconds(0).valueOf()
         let diff = (referenceTimestamp - startTimestamp) / 3600 / 1000
 
         diff = diff >= 0 ? '+' + diff : '' + diff
@@ -233,7 +232,7 @@ export default {
             poiID: this.poi.id,
             startTimestamp: startTimestamp - 2 * 3600 * 1000,
             endTimestamp: endTimestamp + 2 * 3600 * 1000,
-            referenceTimestamp: this.$moment.utc(nowTimestamp).hours(6).subtract(i*24, 'hours').minutes(0).seconds(0).milliseconds(0).valueOf(),
+            referenceTimestamp: this.$moment.utc(nowTimestamp).hours(6).subtract(i * 24, 'hours').minutes(0).seconds(0).milliseconds(0).valueOf(),
             unit: voiConfig.unit
           })
           curves.push({label: 'M ' + diff + 'h', unit: voiConfig.unit, data: loadResult.data})
@@ -288,10 +287,6 @@ export default {
         let startHoursOffset = 25 + minusHours[i]
         startHoursOffset = startHoursOffset >= 0 ? '+' + startHoursOffset : '' + startHoursOffset
 
-        let endHoursOffset = ((this.$_.last(loadResult.data).timestamp - startTimestamp) / 3600 / 1000)
-        endHoursOffset = endHoursOffset >= 0 ? '+' + endHoursOffset : '' + endHoursOffset
-
-        //loadResult.label = loadResult.label + ' [' + startHoursOffset + 'h, ' + endHoursOffset + 'h]'
         loadResult.label = 'C ' + startHoursOffset + 'h'
         loadResult.referenceTimestamp = referenceTimestamp
         forecastCurves.push(loadResult)
@@ -322,7 +317,7 @@ export default {
     for (let i = 0; i < 8; i++) {
       colors.push('rgba(' + basicColor + ',' + (1 - (7 - i) * 1 / 8.0) + ')')
     }
-    
+
     const basicColors = ['24,91,133', '0,168,120', '100,99,99', '0,0,0']
     const l = 8
     for (let i = 0; i < 20; i++) {

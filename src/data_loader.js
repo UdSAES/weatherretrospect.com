@@ -16,7 +16,6 @@ export async function loadCosmoData (options) {
     unit
   } = options
 
-
   scalingFactor = scalingFactor || 1
   scalingOffset = scalingOffset || 0
   origin = origin || process.env.DWD_DATA_API_ORIGIN
@@ -69,7 +68,7 @@ export async function loadReportData (options) {
   }
 
   _.remove(result.body.data, (item) => {
-    return item.timestamp < startTimestamp || item.timestamp > endTimestamp
+    return item.timestamp < startTimestamp || item.timestamp >= endTimestamp
   })
 
   result.body.data = _.map(result.body.data, (item) => {
@@ -113,9 +112,9 @@ export async function loadMosmixData (options) {
   }
 
   _.remove(result.body.data, (item) => {
-    return item.timestamp < startTimestamp || item.timestamp > endTimestamp
+    return item.timestamp < startTimestamp || item.timestamp >= endTimestamp
   })
-  
+
   result.body.data = _.map(result.body.data, (item) => {
     return {timestamp: item.timestamp, value: item.value * scalingFactor + scalingOffset}
   })

@@ -31,19 +31,13 @@ export default {
       type: Number,
       default: function () {
         return undefined
-      },
+      }
     },
     xAxisMaxValue: {
       type: Number,
       default: function () {
         return undefined
-      },
-    },
-    xAxisMaxValue: {
-      type: Number,
-      default: function () {
-        return undefined
-      },
+      }
     },
     displayLeftAxis: {
       type: Boolean,
@@ -236,8 +230,7 @@ export default {
                   if (values[index].major) {
                     return that.$moment(values[index].value).format('DD.MM.YYYY HH:mm')
                   }
-                },
-                
+                }
               },
               time: {
                 min: that.xAxisMinValue,
