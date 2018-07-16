@@ -85,6 +85,8 @@
           :leftAxisLabel="leftAxisLabel"
           :leftAxisWidth="80"
           :showLegend="showLegend"
+          :xAxisMinValue="xAxisMinValue"
+          :xAxisMaxValue="xAxisMaxValue"
         ></single-chart>
       </v-flex>
       <v-flex xs12 style="height: 450px" v-if="loading">
@@ -102,7 +104,7 @@
 
 <script>
 import SingleChart from '@/Components/SingleChart'
-import {loadCosmoData, loadReportData} from '@/data_loader.js'
+import {loadCosmoData, loadReportData, loadMosmixData} from '@/data_loader.js'
 import * as Parallel from 'async-parallel'
 import _ from 'lodash'
 
@@ -169,14 +171,16 @@ export default {
       date: this.$moment().format('YYYY-MM-DD'),
       time: '00:00',
       menu2: false,
-      curveColors: ['#000000', 'rgba(24, 91, 133, 1)', 'rgba(24, 91, 133, 0.9)', 'rgba(24, 91, 133, 0.8)', 'rgba(24, 91, 133, 0.7)', 'rgba(24, 91, 133, 0.6)', 'rgba(24, 91, 133, 0.5)', 'rgba(24, 91, 133, 0.4)', 'rgba(24, 91, 133, 0.3)', 'rgba(24, 91, 133, 0.2)'],
+      curveColors: ['#000000', 'rgba(255, 0, 0, 1)', 'rgba(255, 0, 0, 1)', 'rgba(24, 91, 133, 1)', 'rgba(24, 91, 133, 0.9)', 'rgba(24, 91, 133, 0.8)', 'rgba(24, 91, 133, 0.7)', 'rgba(24, 91, 133, 0.6)', 'rgba(24, 91, 133, 0.5)', 'rgba(24, 91, 133, 0.4)', 'rgba(24, 91, 133, 0.3)', 'rgba(24, 91, 133, 0.2)'],
       borderDashs: [undefined],
       curves: [],
       voiSelectionItems: [{text: 'air_temperature', value: 't_2m'}, {text: 'air_pressure', value: 'pmsl'}, {text: 'relative_humidity', value: 'relhum_2m'}, {text: 'diffuse_radiation', value: 'aswdifd_s'}, {text: 'direct_radiation', value: 'aswdir_s'}, {text: 'dew_point', value: 'td_2m'}, {text: 'wind_speed', value: 'ws_10m'}, {text: 'wind_direction', value: 'wd_10m'}],
       selectedVoi: 't_2m',
       loading: false,
       showForecasts: false,
-      leftAxisLabel: '°C'
+      leftAxisLabel: '°C',
+      xAxisMinValue: null,
+      xAxisMaxValue: null,
     }
   },
 
@@ -186,14 +190,17 @@ export default {
     },
 
     async loadData () {
+      
       this.loading = true
       const voiConfig = voiConfigs[this.selectedVoi]
       const dateTimeString = this.date + ', ' + this.time
       const nowTimestamp = this.$moment(dateTimeString, 'YYYY-MM-DD, HH:mm')
       const startTimestamp = this.$moment.utc(nowTimestamp).minutes(0).seconds(0).milliseconds(0).valueOf()
-      const endTimestamp = this.$moment.utc(startTimestamp).add(25, 'hours').valueOf()
+      const endTimestamp = this.$moment.utc(startTimestamp).add(24, 'hours').valueOf()
 
       const curves = []
+      this.xAxisMinValue = startTimestamp
+      this.xAxisMaxValue = endTimestamp
       this.leftAxisLabel = voiConfig.unit
 
       let loadResult
@@ -204,12 +211,36 @@ export default {
           scalingOffset: voiConfig.scalingOffset,
           poiID: this.poi.id,
           startTimestamp: startTimestamp,
-          endTimestamp: endTimestamp,
+          endTimestamp: endTimestamp+1,
           unit: voiConfig.unit
         })
+        loadResult.label = 'Measured'
         curves.push(loadResult)
       } catch (error) {
         console.error(error)
+      }
+
+      for (let i = 6; i >= -1; i--) {
+        const referenceTimestamp = this.$moment.utc(nowTimestamp).hours(6).subtract(i*24, 'hours').minutes(0).seconds(0).milliseconds(0).valueOf()
+        let diff = (referenceTimestamp - startTimestamp) / 3600 / 1000
+
+        diff = diff >= 0 ? '+' + diff : '' + diff
+        try {
+          loadResult = await loadMosmixData({
+            voi: this.selectedVoi,
+            scalingFactor: voiConfig.scalingFactor,
+            scalingOffset: voiConfig.scalingOffset,
+            poiID: this.poi.id,
+            startTimestamp: startTimestamp - 2 * 3600 * 1000,
+            endTimestamp: endTimestamp + 2 * 3600 * 1000,
+            referenceTimestamp: this.$moment.utc(nowTimestamp).hours(6).subtract(i*24, 'hours').minutes(0).seconds(0).milliseconds(0).valueOf(),
+            unit: voiConfig.unit
+          })
+          curves.push({label: 'M ' + diff + 'h', unit: voiConfig.unit, data: loadResult.data})
+        } catch (error) {
+          console.error(error)
+          curves.push({label: 'M ' + diff + 'h', unit: voiConfig.unit, data: []})
+        }
       }
 
       // if forecasts shall not be shown, we stop right here
@@ -260,12 +291,15 @@ export default {
         let endHoursOffset = ((this.$_.last(loadResult.data).timestamp - startTimestamp) / 3600 / 1000)
         endHoursOffset = endHoursOffset >= 0 ? '+' + endHoursOffset : '' + endHoursOffset
 
-        loadResult.label = loadResult.label + ' [' + startHoursOffset + 'h, ' + endHoursOffset + 'h]'
+        //loadResult.label = loadResult.label + ' [' + startHoursOffset + 'h, ' + endHoursOffset + 'h]'
+        loadResult.label = 'C ' + startHoursOffset + 'h'
+        loadResult.referenceTimestamp = referenceTimestamp
         forecastCurves.push(loadResult)
       }.bind(this), 24)
 
       forecastCurves = _.sortBy(forecastCurves, (curve) => {
-        return curve.data[0].timestamp
+        console.log(curve.referenceTimestamp)
+        return curve.referenceTimestamp
       })
 
       this.curves = _.concat(curves, forecastCurves)
@@ -284,6 +318,11 @@ export default {
   created: function () {
     const colors = ['#000000']
 
+    const basicColor = '128, 38, 83'
+    for (let i = 0; i < 8; i++) {
+      colors.push('rgba(' + basicColor + ',' + (1 - (7 - i) * 1 / 8.0) + ')')
+    }
+    
     const basicColors = ['24,91,133', '0,168,120', '100,99,99', '0,0,0']
     const l = 8
     for (let i = 0; i < 20; i++) {

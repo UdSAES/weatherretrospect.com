@@ -27,6 +27,24 @@ export default {
         ]
       }
     },
+    xAxisMinValue: {
+      type: Number,
+      default: function () {
+        return undefined
+      },
+    },
+    xAxisMaxValue: {
+      type: Number,
+      default: function () {
+        return undefined
+      },
+    },
+    xAxisMaxValue: {
+      type: Number,
+      default: function () {
+        return undefined
+      },
+    },
     displayLeftAxis: {
       type: Boolean,
       default: function () {
@@ -218,7 +236,12 @@ export default {
                   if (values[index].major) {
                     return that.$moment(values[index].value).format('DD.MM.YYYY HH:mm')
                   }
-                }
+                },
+                
+              },
+              time: {
+                min: that.xAxisMinValue,
+                max: that.xAxisMaxValue
               }
             }],
             yAxes: yAxes
