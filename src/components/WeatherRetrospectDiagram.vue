@@ -73,6 +73,35 @@
           </template>
         </v-select>
       </v-flex>
+      <v-flex xs1 mr-1 ml-1>
+        <v-btn
+          flat
+          large
+          @click.stop="infoDialog = true"
+        >
+          <v-icon>
+            info
+          </v-icon>
+        </v-btn>
+        <v-dialog
+          v-model="infoDialog"
+          max-width="700"
+        >
+          <v-card>
+            <v-card-title class="headline">Curve legend</v-card-title>
+            <v-card-text>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="green darken-1"
+                flat="flat"
+                @click="infoDialog = false"
+              >OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-flex>
     </v-layout>
     <v-layout >
       <v-flex xs12 style="height: 450px" v-if="!loading">
@@ -180,7 +209,8 @@ export default {
       showForecasts: false,
       leftAxisLabel: '°C',
       xAxisMinValue: null,
-      xAxisMaxValue: null
+      xAxisMaxValue: null,
+      infoDialog: false
     }
   },
 
@@ -231,7 +261,7 @@ export default {
             scalingOffset: voiConfig.scalingOffset,
             poiID: this.poi.id,
             startTimestamp: startTimestamp - 2 * 3600 * 1000,
-            endTimestamp: endTimestamp + 2 * 3600 * 1000,
+            endTimestamp: endTimestamp + 2 * 3600 * 1000 + 1,
             referenceTimestamp: this.$moment.utc(nowTimestamp).hours(6).subtract(i * 24, 'hours').minutes(0).seconds(0).milliseconds(0).valueOf(),
             unit: voiConfig.unit
           })
