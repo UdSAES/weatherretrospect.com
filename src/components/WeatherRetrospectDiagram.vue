@@ -88,8 +88,16 @@
           max-width="700"
         >
           <v-card>
-            <v-card-title class="headline">Curve legend</v-card-title>
-            <v-card-text>
+            <v-card-title class="headline">Info</v-card-title>
+            <v-card-text v-if="language === 'de_DE'" class="text-xs-left">
+              <p>Zusätzlich zu den gemessenen Werten können in dieser Grafik auch die Vorhersagedaten für die ausgewählte Größe angezeigt werden. Es stehen sowohl die numerischen Modellvorhersagedaten des sogenannten <a href="https://www.dwd.de/DE/leistungen/modellvorhersagedaten/modellvorhersagedaten.html" target="_blank">COSMO-D2-Modells</a>, als auch statistisch optimierte Punktvorhersagen, genannt <a href="https://www.dwd.de/DE/leistungen/met_verfahren_mosmix/met_verfahren_mosmix.html" target="_blank">MOSMIX</a>, zur Verfügung.</p>
+
+              <p>In der Legende der Grafik werden die Kurven durch ein Kürzel für das Vorhersageverfahren und das Alter der Vorhersage bezogen auf den Beginn des in der Grafik dargestellten Zeitraums identifiziert. Beispielsweise bezeichnet "M-021h" in einer Darstellung von 00h - 24h die MOSMIX-Vorhersage, die um drei Uhr am Vortag erstellt wurde. In einer Darstellung, die um sieben Uhr morgens beginnt, bezeichnet "C-004h" die durch das COSMO-D2-Modell um drei Uhr morgens am selben Tag erstellte Vorhersage.</p>
+            </v-card-text>
+            <v-card-text v-else class="text-xs-left">
+              <p>In addition to the measured data, forecasts for the selected values can be shown in this graphic. Both the forecasts created by the numerical weather prediction model <a href="https://www.dwd.de/EN/ourservices/nwp_forecast_data/nwp_forecast_data.html" target="_blank">COSMO-D2</a>as well as statistically optimized point forecasts, denoted <a href="https://www.dwd.de/EN/ourservices/met_application_mosmix/met_application_mosmix.html" target="_blank">MOSMIX</a>, are available.</p>
+
+              <p>An abbreviation is used for identifying the individual curves of the graph, indicating the type of forecast and the beginning of the forecast horizon. The latter is expressed as the age of the forecast in hours with respect to the beginning of the time frame shown in the graph. For example, if the graph shows exactly one day, "M-021h" denotes the MOSMIX-forecast that was created at three a.m. on the previous day. If the graph starts at seven in the morning, "C-004h" denotes the forecast based on the COSMO-D2-model that was created at three a.m. on the same day.</p>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -337,6 +345,12 @@ export default {
       id: '10708',
       lat: 50,
       lon: 7.5
+    },
+    language: {
+      type: String,
+      default () {
+        return 'en_US'
+      }
     }
   },
 
@@ -388,4 +402,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+a {
+  padding-left: 0px;
+  padding-right: 0px;
+}
 </style>

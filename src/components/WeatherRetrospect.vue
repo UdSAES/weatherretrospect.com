@@ -44,6 +44,7 @@
         <v-card class="elevation-6 mr-1 ml-1 mt-1">
           <weather-retrospect-diagram
             :poi="poi"
+            :language="language"
           ></weather-retrospect-diagram>
         </v-card>
       </v-flex>
@@ -76,6 +77,12 @@ export default {
       id: '10708',
       lat: 50,
       lon: 7.5
+    },
+    language: {
+      type: String,
+      default () {
+        return 'en_US'
+      }
     }
   },
 

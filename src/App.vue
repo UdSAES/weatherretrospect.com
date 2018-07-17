@@ -69,6 +69,7 @@
             <v-card>
               <weather-retrospect
                 :poi="selectedPoi"
+                :language="selectedLanguage"
               ></weather-retrospect>
             </v-card>
           </v-flex>
