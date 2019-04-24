@@ -357,15 +357,20 @@ export default {
   created: function () {
     const colors = ['#000000']
 
-    const basicColor = '128, 38, 83'
+    const basicColor = '128, 38, 83' // DESIGNETZ LILAC 1
     for (let i = 0; i < 8; i++) {
       colors.push('rgba(' + basicColor + ',' + (1 - (7 - i) * 1 / 8.0) + ')')
     }
 
-    const basicColors = ['24,91,133', '0,168,120', '100,99,99', '0,0,0']
+    const basicColors = [
+      '38,123,129', // DESIGNETZ UMBRA 1
+      '0,168,120', // DESIGNETZ DUNKELGRÜN
+      '100,99,99', // DESIGNETZ GRAU 1
+      '0,0,0'
+    ]
     const l = 8
     for (let i = 0; i < 20; i++) {
-      colors.push('rgba(' + basicColors[Math.floor(i / l)] + ',' + (1 - (i % l) * 0.1) + ')')
+      colors.push('rgba(' + basicColors[Math.floor(i / l)] + ',' + (0.3 + (i % l) * 0.1) + ')')
     }
     this.curveColors = colors
   },
