@@ -1,6 +1,9 @@
 'use strict'
+
 import superagent from 'superagent'
 import _ from 'lodash'
+
+const token = 'Bearer ' + process.env.DWD_DATA_API_JWT
 
 export async function loadCosmoData (options) {
   let {
@@ -20,7 +23,10 @@ export async function loadCosmoData (options) {
   scalingOffset = scalingOffset || 0
   origin = origin || process.env.DWD_DATA_API_ORIGIN
 
-  let result = await superagent.get(origin + '/weather/cosmo/d2/' + referenceTimestamp + '/' + voi + '?lon=' + lon + '&lat=' + lat)
+  const path = origin + '/weather/cosmo/d2/' + referenceTimestamp + '/' + voi + '?lon=' + lon + '&lat=' + lat
+  let result = await superagent
+    .get(path)
+    .set('Authorization', token)
   if (result.statusCode !== 200) {
     // do something
     return
@@ -60,7 +66,10 @@ export async function loadReportData (options) {
   scalingOffset = scalingOffset || 0
   origin = origin || process.env.DWD_DATA_API_ORIGIN
 
-  let result = await superagent.get(origin + '/weather/weather_reports/poi/' + poiID + '/' + voi + '?startTimestamp=' + startTimestamp + '&endTimestamp=' + endTimestamp)
+  const path = origin + '/weather/weather_reports/poi/' + poiID + '/' + voi + '?startTimestamp=' + startTimestamp + '&endTimestamp=' + endTimestamp
+  let result = await superagent
+    .get(path)
+    .set('Authorization', token)
 
   if (result.statusCode !== 200) {
     // do something
@@ -105,7 +114,10 @@ export async function loadMosmixData (options) {
   scalingOffset = scalingOffset || 0
   origin = origin || process.env.DWD_DATA_API_ORIGIN
 
-  let result = await superagent.get(origin + '/weather/local_forecasts/poi/' + referenceTimestamp + '/' + poiID + '/' + voi)
+  const path = origin + '/weather/local_forecasts/poi/' + referenceTimestamp + '/' + poiID + '/' + voi
+  let result = await superagent
+    .get(path)
+    .set('Authorization', token)
   if (result.statusCode !== 200) {
     // do something
     return
